@@ -8,6 +8,9 @@ namespace Merch.System
         MerchResults Query(MerchQuery query);
         MerchState GetState(MerchItem item);
 
+        [CanBeNull] 
+        MerchItem Find(string id);
+
         [CanBeNull]
         MerchGroup GetGroup(MerchItem item);
 

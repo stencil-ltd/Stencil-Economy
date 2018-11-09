@@ -8,10 +8,17 @@ using UnityEngine;
 
 namespace Merch.System
 {
+    // TODO:
+    // - Initial Grants
+    // - Transactional Purchases
+    // - Staged State
+    
     public partial class MerchSystem : IMerchSystem
     {
         private MerchGroup[] _groups;
         private Dictionary<string, MerchGroup> _groupMap;
+        
+        private Dictionary<string, MerchItem> _itemMap;
         private Dictionary<MerchItem, MerchGroup> _itemToGroup;
         private Dictionary<MerchItem, MerchGrant> _itemToGrant;
         private Dictionary<MerchItem, List<MerchListing>> _itemToListings;
@@ -33,26 +40,28 @@ namespace Merch.System
         {
             _groups = Resources.FindObjectsOfTypeAll<MerchGroup>().ToArray();
             _groupMap = _groups.ToDictionary(group => group.Id);
+            _itemMap = new Dictionary<string, MerchItem>();
             _itemToGroup = new Dictionary<MerchItem, MerchGroup>();
+            _itemToGrant = new Dictionary<MerchItem, MerchGrant>();
+            _itemToListings = new Dictionary<MerchItem, List<MerchListing>>();
             foreach (var group in _groups)
             {
                 foreach (var grant in group.Grants)
+                {
+                    _itemMap[grant.Item.Id] = grant.Item;
                     _itemToGroup[grant] = group;
-                foreach (var listing in group.Listings)
-                    _itemToGroup[listing] = group;
-            }
-            _itemToGrant = new Dictionary<MerchItem, MerchGrant>();
-            foreach (var group in _groups)
-                foreach (var grant in group.Grants)
                     _itemToGrant[grant] = grant;
-            _itemToListings = new Dictionary<MerchItem, List<MerchListing>>();
-            foreach (var group in _groups)
+                }
+
                 foreach (var listing in group.Listings)
                 {
+                    _itemMap[listing.Item.Id] = listing.Item;
+                    _itemToGroup[listing] = group;
                     if (!_itemToListings.ContainsKey(listing))
                         _itemToListings[listing] = new List<MerchListing>();
                     _itemToListings[listing].Add(listing);
                 }
+            }
         }
 
         public MerchResults Query(MerchQuery query)

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Merch.Data;
 using UnityEngine;
 using Util;
@@ -26,21 +25,26 @@ namespace Merch.System
             };
         }
 
+        public MerchItem Find(string id)
+        {
+            return _itemMap.ContainsKey(id) ? _itemMap[id] : null;
+        }
+
         public MerchGroup GetGroup(MerchItem item)
         {
-            return _itemToGroup[item];
+            return _itemToGroup.ContainsKey(item) ? _itemToGroup[item] : null;
         }
 
         public bool IsLocked(MerchItem item)
         {
             var group = GetGroup(item);
-            return group.LockItems && LockedInternal(item);
+            return group != null && group.LockItems && LockedInternal(item);
         }
 
         public void SetLocked(MerchItem item, bool locked)
         {
             SetLockedInternal(item, locked);
-            Save(item);
+            Save();
         }
 
         public bool IsAcquired(MerchItem item)
@@ -52,19 +56,26 @@ namespace Merch.System
         {
             if (IsAcquired(item) == acquired) return;
             SetAcquiredInternal(item, acquired);
-            Save(item);
+            Save();
         }
 
         public bool IsEquipped(MerchItem item)
         {
-            return EquippedInternal(item);
+            var group = GetGroup(item);
+            if (group?.SingleEquip == true)
+                return EquippedSingle(group) == item;
+            return EquippedMulti(item);
         }
 
         public void SetEquipped(MerchItem item, bool equipped)
         {
             if (IsEquipped(item) == equipped) return;
-            SetEquippedInternal(item, equipped);
-            Save(item);
+            var group = GetGroup(item);
+            if (group?.SingleEquip == true)
+                SetEquippedSingle(item);
+            else
+                SetEquippedMulti(item, equipped);
+            Save();
         }
 
         public bool IsSelected(MerchItem item)
@@ -76,24 +87,18 @@ namespace Merch.System
         {
             if (item == Selected) return;
             Selected = item;
-            Notify(item);
+            Notify();
         }
 
         public void Save()
         {
-            Save(null);
-        }
-
-        private void Save([CanBeNull] MerchItem item)
-        {
             PlayerPrefs.Save();
-            Notify(item);
+            Notify();
         }
 
-        private void Notify(MerchItem item = null)
+        private void Notify()
         {
             OnChange?.Invoke();
-            item?.NotifyChange();
         }
     }
 }
