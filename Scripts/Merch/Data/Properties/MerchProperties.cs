@@ -8,5 +8,7 @@ namespace Merch.Data.Properties
         public MerchPropertyColor Color = new MerchPropertyColor();
         public MerchPropertyMaterial Material = new MerchPropertyMaterial();
         public MerchPropertyPrefab Prefab = new MerchPropertyPrefab();
+        
+        
     }
 }

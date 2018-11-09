@@ -9,7 +9,7 @@ namespace Merch.Data
     {
         [Header("Settings")]
         public bool SingleEquip = true;
-        public bool Unlockables = true;
+        public bool LockItems = true;
         
         [Reorderable]
         public GrantArray Grants;

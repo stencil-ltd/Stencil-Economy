@@ -10,5 +10,8 @@ namespace Merch.Data
         public MerchItem Item;
         public Price MainPrice;
         public PriceArray ExtraPrices;
+        
+        public static implicit operator MerchItem(MerchListing listing) 
+            => listing.Item;
     }
 }

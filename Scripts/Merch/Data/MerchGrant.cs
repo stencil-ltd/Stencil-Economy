@@ -8,5 +8,8 @@ namespace Merch.Data
         public bool Unlocked = true;
         public bool Acquired = true;
         public MerchItem Item;
+
+        public static implicit operator MerchItem(MerchGrant grant) 
+            => grant.Item;
     }
 }

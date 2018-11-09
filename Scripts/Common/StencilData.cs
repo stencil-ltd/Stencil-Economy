@@ -8,5 +8,10 @@ namespace Common
     {
         public string Id;
         public string Name;
+
+        public override string ToString()
+        {
+            return $"{base.ToString()}, {nameof(Id)}: {Id}, {nameof(Name)}: {Name}";
+        }
     }
 }
