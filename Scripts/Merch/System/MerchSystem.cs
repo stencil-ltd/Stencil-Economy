@@ -9,6 +9,10 @@ using Util;
 
 namespace Merch.System
 {
+    // TODO:
+    // -- Inventory system for multiples
+    // -- Merge system for inventory
+    
     public partial class MerchSystem : IMerchSystem
     {
         private MerchGroup[] _groups;
