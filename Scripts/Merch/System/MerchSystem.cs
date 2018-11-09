@@ -5,12 +5,11 @@ using JetBrains.Annotations;
 using Merch.Data;
 using Plugins.Data;
 using UnityEngine;
+using Util;
 
 namespace Merch.System
 {
     // TODO:
-    // - Initial Grants
-    // - Transactional Purchases
     // - Staged State
     
     public partial class MerchSystem : IMerchSystem
@@ -22,6 +21,9 @@ namespace Merch.System
         private Dictionary<MerchItem, MerchGroup> _itemToGroup;
         private Dictionary<MerchItem, MerchGrant> _itemToGrant;
         private Dictionary<MerchItem, List<MerchListing>> _itemToListings;
+        private Dictionary<MerchItem, MerchState> _staged;
+        
+        private bool _skipSave;
 
         [CanBeNull] public MerchItem Selected { get; private set; }
 
@@ -44,6 +46,7 @@ namespace Merch.System
             _itemToGroup = new Dictionary<MerchItem, MerchGroup>();
             _itemToGrant = new Dictionary<MerchItem, MerchGrant>();
             _itemToListings = new Dictionary<MerchItem, List<MerchListing>>();
+            _staged = new Dictionary<MerchItem, MerchState>();
             foreach (var group in _groups)
             {
                 foreach (var grant in group.Grants)
@@ -62,6 +65,36 @@ namespace Merch.System
                     _itemToListings[listing].Add(listing);
                 }
             }
+
+            if (!PlayerPrefsX.GetBool("merch_system_init"))
+            {
+                ApplyGrants();
+                PlayerPrefsX.SetBool("merch_system_init", true);
+                PlayerPrefs.Save();
+            }
+        }
+
+        private void ApplyGrants()
+        {
+            _skipSave = true;
+            foreach (var grant in _itemToGrant.Values)
+            {
+                switch (grant.Type)
+                {
+                    case MerchGrant.GrantType.Equip:
+                        SetEquipped(grant, true);
+                        goto case MerchGrant.GrantType.Acquire;
+                    case MerchGrant.GrantType.Acquire:
+                        SetAcquired(grant, true);
+                        goto case MerchGrant.GrantType.Unlock;
+                    case MerchGrant.GrantType.Unlock:
+                        SetLocked(grant, false);
+                        break;
+                }
+            }
+
+            _skipSave = false;
+            Save();
         }
 
         public MerchResults Query(MerchQuery query)

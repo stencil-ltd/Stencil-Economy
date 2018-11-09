@@ -1,3 +1,4 @@
+using Currencies;
 using JetBrains.Annotations;
 using Merch.Data;
 
@@ -25,6 +26,9 @@ namespace Merch.System
 
         bool IsSelected(MerchItem item);
         void SetSelected(MerchItem item);
+
+        bool CanPurchase(MerchItem item, Currency currency);
+        bool AttemptPurchase(MerchItem item, Currency currency);
 
         void Save();
         

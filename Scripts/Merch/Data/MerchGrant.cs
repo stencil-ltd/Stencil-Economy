@@ -5,8 +5,15 @@ namespace Merch.Data
     [Serializable]
     public class MerchGrant
     {
-        public bool Unlocked = true;
-        public bool Acquired = true;
+        [Serializable]
+        public enum GrantType
+        {
+            Unlock,
+            Acquire,
+            Equip
+        }
+
+        public GrantType Type = GrantType.Equip;
         public MerchItem Item;
 
         public static implicit operator MerchItem(MerchGrant grant) 

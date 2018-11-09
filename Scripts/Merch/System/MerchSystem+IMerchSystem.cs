@@ -43,6 +43,8 @@ namespace Merch.System
 
         public void SetLocked(MerchItem item, bool locked)
         {
+            var group = GetGroup(item);
+            if (group?.LockItems == false) return;
             SetLockedInternal(item, locked);
             Save();
         }
@@ -72,7 +74,7 @@ namespace Merch.System
             if (IsEquipped(item) == equipped) return;
             var group = GetGroup(item);
             if (group?.SingleEquip == true)
-                SetEquippedSingle(item);
+                SetEquippedSingle(equipped ? item : null);
             else
                 SetEquippedMulti(item, equipped);
             Save();
@@ -92,6 +94,7 @@ namespace Merch.System
 
         public void Save()
         {
+            if (_skipSave) return;
             PlayerPrefs.Save();
             Notify();
         }
