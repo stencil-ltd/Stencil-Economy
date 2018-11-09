@@ -9,9 +9,6 @@ using Util;
 
 namespace Merch.System
 {
-    // TODO:
-    // - Staged State
-    
     public partial class MerchSystem : IMerchSystem
     {
         private MerchGroup[] _groups;
