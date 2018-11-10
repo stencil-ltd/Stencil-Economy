@@ -15,6 +15,18 @@ namespace Merch.System
     
     public partial class MerchSystem : IMerchSystem
     {
+        private static MerchSystem _instance;
+        public static MerchSystem Instance
+        {
+            get
+            {
+                if (_instance != null) return _instance;
+                _instance = new MerchSystem();
+                _instance.Initialize();
+                return _instance;
+            }
+        }
+        
         private MerchGroup[] _groups;
         private Dictionary<string, MerchGroup> _groupMap;
         
@@ -126,7 +138,7 @@ namespace Merch.System
             if (query.Selected != null)
                 all = all.Where(result => result.State.Selected == query.Selected);
             
-            return new MerchResults(all.ToList());
+            return new MerchResults(query, all.ToList());
         }
     }
 }

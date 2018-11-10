@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Currencies;
+using Merch.Data;
 
 namespace Merch.System
 {
@@ -14,6 +15,11 @@ namespace Merch.System
             if (result.State.ExtraPrices != null && currencies.Intersect(result.State.ExtraPrices.Select(price => price.Currency)).ToArray().Length > 0)
                 return true;
             return false;
+        }
+
+        public static MerchQuery Query(this MerchGroup group)
+        {
+            return new MerchQuery().WithGroup(group).WithAutoselect(true);
         }
     }
 }

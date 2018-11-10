@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Merch.Data;
 using UnityEngine;
+using UnityEngine.Analytics;
+using UnityEngine.U2D;
 using Util;
 
 namespace Merch.System
@@ -46,7 +48,7 @@ namespace Merch.System
             var group = GetGroup(item);
             if (group?.LockItems == false) return;
             SetLockedInternal(item, locked);
-            Save();
+            Save(item);
         }
 
         public bool IsAcquired(MerchItem item)
@@ -58,7 +60,7 @@ namespace Merch.System
         {
             if (IsAcquired(item) == acquired) return;
             SetAcquiredInternal(item, acquired);
-            Save();
+            Save(item);
         }
 
         public bool IsEquipped(MerchItem item)
@@ -73,11 +75,15 @@ namespace Merch.System
         {
             if (IsEquipped(item) == equipped) return;
             var group = GetGroup(item);
+            MerchItem old = null;
             if (group?.SingleEquip == true)
+            {
+                old = EquippedSingle(group);
                 SetEquippedSingle(equipped ? item : null);
+            }
             else
                 SetEquippedMulti(item, equipped);
-            Save();
+            Save(item, old);
         }
 
         public bool IsSelected(MerchItem item)
@@ -88,19 +94,41 @@ namespace Merch.System
         public void SetSelected(MerchItem item)
         {
             if (item == Selected) return;
+            var old = Selected;
             Selected = item;
-            Notify();
+            Notify(item, old);
         }
 
-        public void Save()
+        private void Save(params MerchItem[] items)
         {
             if (_skipSave) return;
             PlayerPrefs.Save();
-            Notify();
+            Notify(items);
+        }
+        
+        public void Save()
+        {
+            Save(null);
         }
 
-        private void Notify()
+        private HashSet<MerchGroup> _notifySeenGroups = new HashSet<MerchGroup>();
+        private void Notify(params MerchItem[] items)
         {
+            if (items != null)
+            {
+                _notifySeenGroups.Clear();
+                foreach (var item in items)
+                {
+                    if (item == null) continue;
+                    item.NotifyChanged();
+                    var group = GetGroup(item);
+                    if (group != null && !_notifySeenGroups.Contains(group))
+                    {
+                        _notifySeenGroups.Add(group);
+                        group.NotifyChanged();
+                    }
+                }
+            }
             OnChange?.Invoke();
         }
     }

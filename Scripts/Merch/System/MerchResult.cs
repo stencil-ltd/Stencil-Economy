@@ -5,7 +5,7 @@ namespace Merch.System
     public struct MerchResult
     {
         public readonly MerchItem Item;
-        public readonly MerchState State;
+        public MerchState State;
 
         public MerchResult(MerchItem item, MerchState state)
         {
@@ -27,6 +27,13 @@ namespace Merch.System
             GetState(system, Item, ref State);
             State.MainPrice = listing.MainPrice;
             State.ExtraPrices = listing.ExtraPrices;
+        }
+
+        public void Autoselect()
+        {
+            var state = State;
+            state.Selected = true;
+            State = state;
         }
 
         private static void GetState(IMerchSystem system, MerchItem item, ref MerchState state)

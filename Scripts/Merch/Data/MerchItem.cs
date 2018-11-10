@@ -1,6 +1,8 @@
+using System;
 using Common;
 using Merch.Data.Properties;
 using UnityEngine;
+using Util;
 
 namespace Merch.Data
 {
@@ -8,5 +10,11 @@ namespace Merch.Data
     public class MerchItem : StencilData
     {
         public MerchProperties Properties = new MerchProperties();
+        
+        public event EventHandler OnChange;
+        public void NotifyChanged()
+        {
+            OnChange?.Invoke();
+        }
     }
 }

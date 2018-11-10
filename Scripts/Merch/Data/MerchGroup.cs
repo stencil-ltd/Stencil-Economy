@@ -1,6 +1,8 @@
+using System;
 using Common;
 using Malee;
 using UnityEngine;
+using Util;
 
 namespace Merch.Data
 {
@@ -16,5 +18,11 @@ namespace Merch.Data
         
         [Reorderable]
         public ListingArray Listings;
+
+        public event EventHandler OnChange;
+        public void NotifyChanged()
+        {
+            OnChange?.Invoke();
+        }
     }
 }
