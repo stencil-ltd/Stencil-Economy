@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Merch.System
 {
@@ -11,11 +10,6 @@ namespace Merch.System
         {
             Query = query;
             Results = results;
-            if (results.Count > 0 && query.Autoselect && !results.Any(result => result.State.Selected))
-            {
-                var first = results.First();
-                first.Autoselect();
-            }
         }
     }
 }

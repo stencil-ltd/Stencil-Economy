@@ -19,7 +19,7 @@ namespace Merch.System
 
         public static MerchQuery Query(this MerchGroup group)
         {
-            return new MerchQuery().WithGroup(group).WithAutoselect(true);
+            return new MerchQuery().WithGroup(group);
         }
     }
 }

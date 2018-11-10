@@ -16,8 +16,6 @@ namespace Merch.System
         public bool? Equipped;
         public bool? Selected;
 
-        public bool Autoselect;
-
         public MerchResults Execute([CanBeNull] IMerchSystem system = null)
         {
             system = system ?? MerchSystem.Instance;
@@ -57,12 +55,6 @@ namespace Merch.System
         public MerchQuery WithSelected(bool? value)
         {
             Selected = value;
-            return this;
-        }
-
-        public MerchQuery WithAutoselect(bool value)
-        {
-            Autoselect = value;
             return this;
         }
     }

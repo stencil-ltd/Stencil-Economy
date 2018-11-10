@@ -88,6 +88,8 @@ namespace Merch.System
 
         public bool IsSelected(MerchItem item)
         {
+            if (Selected == null)
+                Selected = item;
             return Selected == item;
         }
 

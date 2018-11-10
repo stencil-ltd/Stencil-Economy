@@ -29,13 +29,6 @@ namespace Merch.System
             State.ExtraPrices = listing.ExtraPrices;
         }
 
-        public void Autoselect()
-        {
-            var state = State;
-            state.Selected = true;
-            State = state;
-        }
-
         private static void GetState(IMerchSystem system, MerchItem item, ref MerchState state)
         {
             state.Locked = system.IsLocked(item);
