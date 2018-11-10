@@ -9,6 +9,8 @@ namespace Merch.Data
     [CreateAssetMenu(menuName = "Economy/Merch Item")]
     public class MerchItem : StencilData
     {
+        public bool Unlockable;
+        
         public MerchProperties Properties = new MerchProperties();
         
         public event EventHandler OnChange;
