@@ -76,6 +76,7 @@ namespace Merch.System
         public void SetEquipped(MerchItem item, bool equipped)
         {
             if (IsEquipped(item) == equipped) return;
+            if (!IsAcquired(item)) return;
             var group = GetGroup(item);
             MerchItem old = null;
             if (group?.SingleEquip == true)
@@ -95,8 +96,7 @@ namespace Merch.System
 
         public bool IsSelected(MerchItem item)
         {
-            if (Selected == null)
-                Selected = item;
+            if (Selected == null && IsEquipped(item)) Selected = item;
             return Selected == item;
         }
 

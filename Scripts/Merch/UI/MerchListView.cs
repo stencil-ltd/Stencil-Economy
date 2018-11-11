@@ -18,8 +18,7 @@ namespace Merch.UI
 
         private void OnEnable()
         {
-            AddListener();
-            Populate();
+            Refresh();
         }
 
         private void OnDisable()
@@ -32,7 +31,13 @@ namespace Merch.UI
             if (Group == group) return;
             RemoveListener();
             Group = group;
+            Refresh();
+        }
+
+        private void Refresh()
+        {
             AddListener();
+            MerchSystem.Instance.SetSelected(null);
             Populate();
         }
 
