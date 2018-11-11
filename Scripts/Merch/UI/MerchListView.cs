@@ -2,6 +2,7 @@ using System;
 using Merch.Data;
 using Merch.System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Util;
 
@@ -9,9 +10,15 @@ namespace Merch.UI
 {
     public class MerchListView : MonoBehaviour
     {
+        [Serializable]
+        public class MerchListEvent : UnityEvent<MerchGroup>
+        {}
+        
         public MerchGroup Group;
         public MerchItemView ItemViewPrefab;
         public LayoutGroup Content;
+
+        public MerchListEvent OnSetGroup;
 
         private MerchQuery _query;
         private MerchResults _results;
@@ -26,7 +33,7 @@ namespace Merch.UI
             RemoveListener();
         }
 
-        private void SetGroup(MerchGroup group)
+        public void SetGroup(MerchGroup group)
         {
             if (Group == group) return;
             RemoveListener();
@@ -39,6 +46,7 @@ namespace Merch.UI
             AddListener();
             MerchSystem.Instance.SetSelected(null);
             Populate();
+            OnSetGroup?.Invoke(Group);
         }
 
         private void AddListener()
