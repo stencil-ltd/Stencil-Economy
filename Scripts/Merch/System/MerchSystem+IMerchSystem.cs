@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.U2D;
 using Util;
+using NotImplementedException = System.NotImplementedException;
 
 namespace Merch.System
 {
@@ -85,6 +86,11 @@ namespace Merch.System
             else
                 SetEquippedMulti(item, equipped);
             Save(item, old);
+        }
+
+        public MerchItem GetEquippedSingle(MerchGroup group)
+        {
+            return !group.SingleEquip ? null : EquippedSingle(group);
         }
 
         public bool IsSelected(MerchItem item)

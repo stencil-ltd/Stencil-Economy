@@ -1,9 +1,9 @@
 using Merch.System;
 using UnityEngine;
 
-namespace UI
+namespace Merch.UI
 {
-    public abstract class MerchListingView : MonoBehaviour
+    public abstract class MerchItemView : MonoBehaviour
     {
         public MerchResult Result { get; private set; }
         

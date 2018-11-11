@@ -23,6 +23,7 @@ namespace Merch.System
 
         bool IsEquipped(MerchItem item);
         void SetEquipped(MerchItem item, bool equipped);
+        [CanBeNull] MerchItem GetEquippedSingle(MerchGroup group);
 
         bool IsSelected(MerchItem item);
         void SetSelected(MerchItem item);

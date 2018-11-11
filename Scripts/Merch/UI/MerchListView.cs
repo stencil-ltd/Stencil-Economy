@@ -5,12 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using Util;
 
-namespace UI
+namespace Merch.UI
 {
-    public class MerchCollection : MonoBehaviour
+    public class MerchListView : MonoBehaviour
     {
         public MerchGroup Group;
-        public MerchListingView ListingViewPrefab;
+        public MerchItemView ItemViewPrefab;
         public LayoutGroup Content;
 
         private MerchQuery _query;
@@ -56,7 +56,7 @@ namespace UI
             _results = _query.Execute();
             foreach (var result in _results.Results)
             {
-                var listing = Instantiate(ListingViewPrefab, Content.transform);
+                var listing = Instantiate(ItemViewPrefab, Content.transform);
                 listing.SetResult(result);
             }
         }
