@@ -14,5 +14,6 @@ namespace Merch.UI
 
         public DisplayMode Mode;
         public bool ShowGear;
+        public bool ResetScale;
     }
 }
