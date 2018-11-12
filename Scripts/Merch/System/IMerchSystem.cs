@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Currencies;
 using JetBrains.Annotations;
 using Merch.Data;
@@ -14,6 +15,8 @@ namespace Merch.System
 
         [CanBeNull]
         MerchGroup GetGroup(MerchItem item);
+
+        IEnumerable<MerchItem> GetItems(MerchGroup group);
 
         bool IsLocked(MerchItem item);
         void SetLocked(MerchItem item, bool locked);

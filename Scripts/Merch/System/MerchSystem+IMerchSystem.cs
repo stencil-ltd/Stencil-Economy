@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Merch.Data;
 using UnityEngine;
 using UnityEngine.Analytics;
@@ -36,6 +37,13 @@ namespace Merch.System
         public MerchGroup GetGroup(MerchItem item)
         {
             return item.Group;
+        }
+
+        public IEnumerable<MerchItem> GetItems(MerchGroup group)
+        {
+            var grants = group.Grants.Select(grant => grant.Item);
+            var listings = group.Listings.Select(listing => listing.Item);
+            return grants.Concat(listings);
         }
 
         public bool IsLocked(MerchItem item)
@@ -111,7 +119,6 @@ namespace Merch.System
 
         public bool IsSelected(MerchItem item)
         {
-            if (Selected == null && IsEquipped(item)) Selected = item;
             return Selected == item;
         }
 

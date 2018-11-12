@@ -12,5 +12,10 @@ namespace Merch.System
         
         public Price MainPrice;
         public PriceArray ExtraPrices;
+
+        public override string ToString()
+        {
+            return $"{nameof(Locked)}: {Locked}, {nameof(Selected)}: {Selected}, {nameof(Acquired)}: {Acquired}, {nameof(Equipped)}: {Equipped}";
+        }
     }
 }

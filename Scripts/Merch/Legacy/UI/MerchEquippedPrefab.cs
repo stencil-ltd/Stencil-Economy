@@ -39,14 +39,16 @@ namespace Merch.Legacy.UI
         public void Refresh()
         {
             var buyable = MerchSystem.Instance.GetEquippedSingle(Group);
-            if (buyable == Item) return;
-            Debug.Log($"Equip Child: {buyable} (was {Item})");
-            Item = buyable;
-            transform.DestroyAllChildren();
-            Equipped = Instantiate(Prefab, Vector3.zero, Quaternion.identity, transform);
-            Equipped.GetComponent<MerchDisplay>()?.MerchConfigure(buyable, Config);            
-            if (!string.IsNullOrEmpty(SpawnName))
-                Equipped.name = SpawnName;
+            if (buyable != Item)
+            {
+                Debug.Log($"Equip Child: {buyable} (was {Item})");
+                Item = buyable;
+                transform.DestroyAllChildren();
+                Equipped = Instantiate(Prefab, Vector3.zero, Quaternion.identity, transform);
+                if (!string.IsNullOrEmpty(SpawnName))
+                    Equipped.name = SpawnName;
+            }
+            Equipped.GetComponent<MerchDisplay>()?.MerchConfigure(buyable, Config);
             OnRefresh?.Invoke();
         }
     }

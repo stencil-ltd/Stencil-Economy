@@ -36,5 +36,10 @@ namespace Merch.System
             state.Acquired = system.IsAcquired(item);
             state.Equipped = system.IsEquipped(item);
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(Item)}: {Item}, {nameof(State)}: {State}";
+        }
     }
 }

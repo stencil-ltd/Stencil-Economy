@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Merch.Data;
 using Merch.System;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace Merch.UI
 
         private void OnEnable()
         {
-            Refresh();
+            SetGroup(Group);
         }
 
         private void OnDisable()
@@ -35,17 +36,19 @@ namespace Merch.UI
 
         public void SetGroup(MerchGroup group)
         {
-            if (Group == group) return;
             Debug.Log($"Set group to {group}");
             RemoveListener();
             Group = group;
+            var selected = MerchSystem.Instance.GetEquippedSingle(group);
+            if (selected == null)
+                selected = MerchSystem.Instance.GetItems(group).FirstOrDefault();
+            MerchSystem.Instance.SetSelected(selected);
             Refresh();
         }
 
         private void Refresh()
         {
             AddListener();
-            MerchSystem.Instance.SetSelected(null);
             Populate();
             OnSetGroup?.Invoke(Group);
         }
@@ -73,6 +76,7 @@ namespace Merch.UI
                 var listing = Instantiate(ItemViewPrefab, Content.transform);
                 listing.SetResult(result);
             }
+            
         }
 
         private void OnChange(object sender, EventArgs e)

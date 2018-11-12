@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 namespace Merch.UI
 {
-    [ExecuteInEditMode]
     public class MerchListViewSelection : MonoBehaviour, IPointerClickHandler
     {
         public MerchListView List;
