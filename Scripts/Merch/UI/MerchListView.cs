@@ -40,7 +40,7 @@ namespace Merch.UI
             RemoveListener();
             Group = group;
             var selected = MerchSystem.Instance.GetEquippedSingle(group);
-            if (selected == null)
+            if (selected?.Group != group)
                 selected = MerchSystem.Instance.GetItems(group).FirstOrDefault();
             MerchSystem.Instance.SetSelected(selected);
             Refresh();
