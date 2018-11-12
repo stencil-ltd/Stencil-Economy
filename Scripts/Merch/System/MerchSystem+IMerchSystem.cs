@@ -35,7 +35,7 @@ namespace Merch.System
 
         public MerchGroup GetGroup(MerchItem item)
         {
-            return _itemToGroup.ContainsKey(item) ? _itemToGroup[item] : null;
+            return item.Group;
         }
 
         public bool IsLocked(MerchItem item)

@@ -36,6 +36,7 @@ namespace Merch.UI
         public void SetGroup(MerchGroup group)
         {
             if (Group == group) return;
+            Debug.Log($"Set group to {group}");
             RemoveListener();
             Group = group;
             Refresh();

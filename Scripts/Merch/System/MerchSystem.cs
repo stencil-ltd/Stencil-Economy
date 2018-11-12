@@ -31,7 +31,6 @@ namespace Merch.System
         private Dictionary<string, MerchGroup> _groupMap;
         
         private Dictionary<string, MerchItem> _itemMap;
-        private Dictionary<MerchItem, MerchGroup> _itemToGroup;
         private Dictionary<MerchItem, MerchGrant> _itemToGrant;
         private Dictionary<MerchItem, List<MerchListing>> _itemToListings;
         private Dictionary<MerchItem, MerchState> _staged;
@@ -56,7 +55,6 @@ namespace Merch.System
             _groups = Resources.FindObjectsOfTypeAll<MerchGroup>().ToArray();
             _groupMap = _groups.ToDictionary(group => group.Id);
             _itemMap = new Dictionary<string, MerchItem>();
-            _itemToGroup = new Dictionary<MerchItem, MerchGroup>();
             _itemToGrant = new Dictionary<MerchItem, MerchGrant>();
             _itemToListings = new Dictionary<MerchItem, List<MerchListing>>();
             _staged = new Dictionary<MerchItem, MerchState>();
@@ -64,15 +62,15 @@ namespace Merch.System
             {
                 foreach (var grant in group.Grants)
                 {
+                    grant.Item.Group = group;
                     _itemMap[grant.Item.Id] = grant.Item;
-                    _itemToGroup[grant] = group;
                     _itemToGrant[grant] = grant;
                 }
 
                 foreach (var listing in group.Listings)
                 {
+                    listing.Item.Group = group;
                     _itemMap[listing.Item.Id] = listing.Item;
-                    _itemToGroup[listing] = group;
                     if (!_itemToListings.ContainsKey(listing))
                         _itemToListings[listing] = new List<MerchListing>();
                     _itemToListings[listing].Add(listing);

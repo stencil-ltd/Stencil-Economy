@@ -9,6 +9,7 @@ namespace Merch.UI
     {
         [Header("Debug")] 
         public bool AcquireOnClick;
+        public bool UpdateInEditor;
         
         public MerchResult Result { get; private set; }
         
@@ -35,8 +36,18 @@ namespace Merch.UI
         public void Refresh()
         {
             OnRefresh();
+            UpdatePreset();
         }
+        
+#if UNITY_EDITOR
+        private void Update()
+        {
+            if (UpdateInEditor)
+                UpdatePreset();
+        }
+#endif
 
         protected abstract void OnRefresh();
+        protected virtual void UpdatePreset() {}
     }
 }
