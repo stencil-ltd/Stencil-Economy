@@ -9,5 +9,8 @@ namespace Currencies
         [Tooltip("Null if IAP.")]
         public Currency Currency;
         public int Amount;
+        
+        public static implicit operator Currency(Price price)
+            => price.Currency;
     }
 }

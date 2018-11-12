@@ -13,19 +13,16 @@ namespace Merch.System
     {
         public MerchState GetState(MerchItem item)
         {
-            List<MerchListing> listings;
-            var hasListings = _itemToListings.TryGetValue(item, out listings); 
-            if (hasListings && listings.Count > 0)
-                Debug.LogError($"Found more than one listing for {item}");
-            
+            MerchListing listing;
+            var hasListings = _itemToListing.TryGetValue(item, out listing);
             return new MerchState
             {
                 Locked = IsLocked(item),
                 Selected = IsSelected(item),
                 Acquired = IsAcquired(item),
                 Equipped = IsEquipped(item),
-                MainPrice = hasListings ? listings[0].MainPrice : null,
-                ExtraPrices = hasListings ? listings[0].ExtraPrices : null
+                MainPrice = hasListings ? listing.MainPrice : null,
+                ExtraPrices = hasListings ? listing.ExtraPrices : null
             };
         }
 

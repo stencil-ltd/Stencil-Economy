@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Merch.System;
 using Scripts.RemoteConfig;
 using UnityEngine;
@@ -20,14 +21,14 @@ namespace Merch.UI
 
         private void OnClick()
         {
-            if (Result.State.Equipped)
-                MerchSystem.Instance.SetEquipped(Result.Item, false);
-            else if (!Result.State.Selected)
+            if (!Result.State.Selected)
                 MerchSystem.Instance.SetSelected(Result.Item);
-            else if (!Result.State.Acquired && AcquireOnClick && StencilRemote.IsDeveloper())
-                MerchSystem.Instance.SetAcquired(Result.Item, true);
-            else 
+            else if (Result.State.Equipped)
+                MerchSystem.Instance.SetEquipped(Result.Item, false);
+            else if (Result.State.Acquired && !Result.State.Equipped)
                 MerchSystem.Instance.SetEquipped(Result.Item, true);
+            else if (AcquireOnClick && StencilRemote.IsDeveloper())
+                MerchSystem.Instance.SetAcquired(Result.Item, true);
         }
         
         public void SetResult(MerchResult result)

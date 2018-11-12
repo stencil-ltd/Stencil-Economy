@@ -32,7 +32,7 @@ namespace Merch.System
         
         private Dictionary<string, MerchItem> _itemMap;
         private Dictionary<MerchItem, MerchGrant> _itemToGrant;
-        private Dictionary<MerchItem, List<MerchListing>> _itemToListings;
+        private Dictionary<MerchItem, MerchListing> _itemToListing;
         private Dictionary<MerchItem, MerchState> _staged;
         
         private bool _skipSave;
@@ -56,7 +56,7 @@ namespace Merch.System
             _groupMap = _groups.ToDictionary(group => group.Id);
             _itemMap = new Dictionary<string, MerchItem>();
             _itemToGrant = new Dictionary<MerchItem, MerchGrant>();
-            _itemToListings = new Dictionary<MerchItem, List<MerchListing>>();
+            _itemToListing = new Dictionary<MerchItem, MerchListing>();
             _staged = new Dictionary<MerchItem, MerchState>();
             foreach (var group in _groups)
             {
@@ -69,9 +69,9 @@ namespace Merch.System
                 foreach (var listing in group.Listings)
                 {
                     RegisterItem(listing, group);
-                    if (!_itemToListings.ContainsKey(listing))
-                        _itemToListings[listing] = new List<MerchListing>();
-                    _itemToListings[listing].Add(listing);
+                    if (_itemToListing.ContainsKey(listing))
+                        throw new Exception($"Duplicate Item Listing! [{listing.Item}]");
+                    _itemToListing[listing] = listing;
                 }
             }
 

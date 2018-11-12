@@ -11,9 +11,9 @@ namespace Merch.System
         [CanBeNull]
         private MerchListing GetListing(MerchItem item)
         {
-            List<MerchListing> listings = null;
-            _itemToListings.TryGetValue(item, out listings);
-            return listings?[0];
+            MerchListing listing;
+            _itemToListing.TryGetValue(item, out listing);
+            return listing;
         }
 
         [CanBeNull]
