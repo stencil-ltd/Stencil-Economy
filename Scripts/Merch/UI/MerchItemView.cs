@@ -20,11 +20,14 @@ namespace Merch.UI
 
         private void OnClick()
         {
-            if (!Result.State.Selected)
+            if (Result.State.Equipped)
+                MerchSystem.Instance.SetEquipped(Result.Item, false);
+            else if (!Result.State.Selected)
                 MerchSystem.Instance.SetSelected(Result.Item);
             else if (!Result.State.Acquired && AcquireOnClick && StencilRemote.IsDeveloper())
                 MerchSystem.Instance.SetAcquired(Result.Item, true);
-            else MerchSystem.Instance.SetEquipped(Result.Item, true);
+            else 
+                MerchSystem.Instance.SetEquipped(Result.Item, true);
         }
         
         public void SetResult(MerchResult result)

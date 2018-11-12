@@ -12,7 +12,8 @@ namespace Merch.Data
     {
         [Header("Settings")]
         public bool SingleEquip = true;
-        public bool LockItems = true;
+        public bool RequiredEquip = false;
+        public bool Lockable = true;
 
         public MerchProperties Properties = new MerchProperties();
         

@@ -33,7 +33,12 @@ namespace Merch.System
             return id == null ? null : Find(id);
         }
 
-        private void SetEquippedSingle(MerchItem item)
+        private void RemoveEquippedSingle(MerchGroup group)
+        {
+            PlayerPrefs.DeleteKey(GetKey("equipped_single", group.Id));
+        }
+
+        private void SetEquippedSingle([NotNull] MerchItem item)
         {
             var group = GetGroup(item);
             PlayerPrefs.SetString(GetKey("equipped_single", group.Id), item.Id);

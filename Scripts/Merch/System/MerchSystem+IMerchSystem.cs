@@ -42,13 +42,13 @@ namespace Merch.System
         {
             if (!item.Unlockable) return false;
             var group = GetGroup(item);
-            return group != null && group.LockItems && LockedInternal(item);
+            return group != null && group.Lockable && LockedInternal(item);
         }
 
         public void SetLocked(MerchItem item, bool locked)
         {
             var group = GetGroup(item);
-            if (group?.LockItems == false) return;
+            if (group?.Lockable == false) return;
             SetLockedInternal(item, locked);
             Save(item);
         }
@@ -78,15 +78,30 @@ namespace Merch.System
             if (IsEquipped(item) == equipped) return;
             if (!IsAcquired(item)) return;
             var group = GetGroup(item);
-            MerchItem old = null;
             if (group?.SingleEquip == true)
             {
-                old = EquippedSingle(group);
-                SetEquippedSingle(equipped ? item : null);
+                if (equipped)
+                {
+                    var old = EquippedSingle(group);
+                    SetEquippedSingle(item);
+                    Save(item, old);
+                }
+                else
+                {
+                    if (group.RequiredEquip)
+                    {
+                        Debug.LogWarning("Refused to unequip required item");
+                        return;
+                    }
+                    RemoveEquippedSingle(group);
+                    Save(item);
+                }
             }
             else
+            {
                 SetEquippedMulti(item, equipped);
-            Save(item, old);
+                Save(item);
+            }
         }
 
         public MerchItem GetEquippedSingle(MerchGroup group)
