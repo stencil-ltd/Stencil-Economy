@@ -99,11 +99,14 @@ namespace Merch.System
                 switch (grant.Type)
                 {
                     case MerchGrant.GrantType.Equip:
-                        SetEquipped(grant, true);
-                        goto case MerchGrant.GrantType.Acquire;
-                    case MerchGrant.GrantType.Acquire:
+                        SetLocked(grant, false);
                         SetAcquired(grant, true);
-                        goto case MerchGrant.GrantType.Unlock;
+                        SetEquipped(grant, true);
+                        break;
+                    case MerchGrant.GrantType.Acquire:
+                        SetLocked(grant, false);
+                        SetAcquired(grant, true);
+                        break;
                     case MerchGrant.GrantType.Unlock:
                         SetLocked(grant, false);
                         break;
