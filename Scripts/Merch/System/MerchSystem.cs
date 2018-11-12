@@ -62,15 +62,13 @@ namespace Merch.System
             {
                 foreach (var grant in group.Grants)
                 {
-                    grant.Item.Group = group;
-                    _itemMap[grant.Item.Id] = grant.Item;
+                    RegisterItem(grant, group);
                     _itemToGrant[grant] = grant;
                 }
 
                 foreach (var listing in group.Listings)
                 {
-                    listing.Item.Group = group;
-                    _itemMap[listing.Item.Id] = listing.Item;
+                    RegisterItem(listing, group);
                     if (!_itemToListings.ContainsKey(listing))
                         _itemToListings[listing] = new List<MerchListing>();
                     _itemToListings[listing].Add(listing);
@@ -83,6 +81,14 @@ namespace Merch.System
                 PlayerPrefsX.SetBool("merch_system_init", true);
                 PlayerPrefs.Save();
             }
+        }
+
+        private void RegisterItem(MerchItem item, MerchGroup group)
+        {
+            item.Group = group;
+            if (_itemMap.ContainsKey(item.Id))
+                throw new Exception($"Duplicate Item Id! [{_itemMap[item.Id]} and {item}]");
+            _itemMap[item.Id] = item;
         }
 
         private void ApplyGrants()
