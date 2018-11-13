@@ -18,6 +18,7 @@ namespace Merch.UI
         public MerchGroup Group;
         public MerchItemView ItemViewPrefab;
         public LayoutGroup Content;
+        public bool ClearSelectedOnExit = true;
 
         public MerchListEvent OnSetGroup;
 
@@ -32,6 +33,8 @@ namespace Merch.UI
         private void OnDisable()
         {
             RemoveListener();
+            if (ClearSelectedOnExit)
+                MerchSystem.Instance.SetSelected(null);
         }
 
         public void SetGroup(MerchGroup group)
