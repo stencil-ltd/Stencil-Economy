@@ -39,7 +39,10 @@ namespace Merch.Legacy.UI
 
         public void Refresh()
         {
-            var buyable = ShowSelected ? MerchSystem.Instance.Selected : MerchSystem.Instance.GetEquippedSingle(Group);
+            MerchItem buyable = null;
+            if (ShowSelected)
+                buyable = MerchSystem.Instance.Selected;
+            buyable = buyable ?? MerchSystem.Instance.GetEquippedSingle(Group);
             if (buyable != Item)
             {
                 Debug.Log($"Equip Child: {buyable} (was {Item})");
