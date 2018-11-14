@@ -11,6 +11,7 @@ namespace Merch.UI
         [Header("Debug")] 
         public bool AcquireOnClick;
         public bool UpdateInEditor;
+        public bool AllowRotation = true;
         
         public MerchResult Result { get; private set; }
         

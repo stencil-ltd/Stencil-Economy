@@ -42,7 +42,8 @@ namespace Merch.Legacy.UI
             MerchItem buyable = null;
             if (ShowSelected)
                 buyable = MerchSystem.Instance.Selected;
-            buyable = buyable ?? MerchSystem.Instance.GetEquippedSingle(Group);
+            if (buyable?.Group != Group)
+                buyable = MerchSystem.Instance.GetEquippedSingle(Group);
             if (buyable != Item)
             {
                 Debug.Log($"Equip Child: {buyable} (was {Item})");
