@@ -14,6 +14,8 @@ namespace Merch.Legacy.UI
         public bool ShowSelected;
         public MerchDisplayConfig Config;
 
+        public float ScaleOnGear = 1f;
+
         public MerchItem Item { get; private set; }
         public GameObject Prefab => Item?.Properties.Prefab.Prefab;
         
@@ -40,10 +42,14 @@ namespace Merch.Legacy.UI
         public void Refresh()
         {
             MerchItem buyable = null;
+            var scale = 1f;
             if (ShowSelected)
                 buyable = MerchSystem.Instance.Selected;
             if (buyable?.Group != Group)
+            {
                 buyable = MerchSystem.Instance.GetEquippedSingle(Group);
+                if (buyable) scale = ScaleOnGear;
+            }
             if (buyable != Item)
             {
                 Debug.Log($"Equip Child: {buyable} (was {Item})");
@@ -53,6 +59,7 @@ namespace Merch.Legacy.UI
                 if (!string.IsNullOrEmpty(SpawnName))
                     Equipped.name = SpawnName;
             }
+            transform.localScale = new Vector3(scale, scale, scale);
             Equipped.GetComponent<MerchDisplay>()?.MerchConfigure(buyable, Config);
             OnRefresh?.Invoke();
         }
