@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Common
@@ -6,8 +8,32 @@ namespace Common
     [Serializable]
     public abstract class StencilData : ScriptableObject
     {
+        private static Dictionary<string, StencilData> _idMap 
+            = new Dictionary<string, StencilData>();
+        
         public string Id;
         public string Name;
+
+        public static void Reload()
+        {
+            var old = _idMap;
+            _idMap = new Dictionary<string, StencilData>();
+            foreach (var stencilData in old.Values)
+                _idMap[stencilData.Id] = stencilData;
+        }
+        
+        [CanBeNull]
+        public static StencilData Find(string id)
+        {
+            return _idMap[id];
+        }
+
+        protected virtual void OnEnable()
+        {
+            if (_idMap.ContainsKey(Id))
+                Debug.LogError($"Duplicate id {Id}");
+            _idMap[Id] = this;
+        }
 
         public override string ToString()
         {
