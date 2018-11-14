@@ -11,6 +11,7 @@ namespace Merch.Legacy.UI
     {
         public MerchGroup Group;
         public string SpawnName;
+        public bool ShowSelected;
         public MerchDisplayConfig Config;
 
         public MerchItem Item { get; private set; }
@@ -38,7 +39,7 @@ namespace Merch.Legacy.UI
 
         public void Refresh()
         {
-            var buyable = MerchSystem.Instance.GetEquippedSingle(Group);
+            var buyable = ShowSelected ? MerchSystem.Instance.Selected : MerchSystem.Instance.GetEquippedSingle(Group);
             if (buyable != Item)
             {
                 Debug.Log($"Equip Child: {buyable} (was {Item})");

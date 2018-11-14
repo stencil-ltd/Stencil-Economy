@@ -1,4 +1,6 @@
 using System;
+using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Merch.UI
 {
@@ -15,5 +17,7 @@ namespace Merch.UI
         public DisplayMode Mode;
         public bool ShowGear;
         public bool ResetScale;
+        
+        [CanBeNull] public Shader OverrideShader;
     }
 }
