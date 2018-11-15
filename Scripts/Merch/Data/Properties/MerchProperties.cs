@@ -12,6 +12,7 @@ namespace Merch.Data.Properties
         public MerchPropertyColor Color = new MerchPropertyColor();
         public MerchPropertySprite Sprite = new MerchPropertySprite();
         public MerchPropertyMaterial Material = new MerchPropertyMaterial();
+        public MerchPropertyTexture Texture = new MerchPropertyTexture();
         public MerchPropertyPrefab Prefab = new MerchPropertyPrefab();        
     }
 }
