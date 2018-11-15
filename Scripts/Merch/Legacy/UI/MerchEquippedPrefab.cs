@@ -48,7 +48,8 @@ namespace Merch.Legacy.UI
             if (buyable?.Group != Group)
             {
                 buyable = MerchSystem.Instance.GetEquippedSingle(Group);
-                if (buyable) scale = ScaleOnGear;
+                if (buyable && Config.Mode == MerchDisplayConfig.DisplayMode.Storefront) 
+                    scale = ScaleOnGear;
             }
             if (buyable != Item)
             {
