@@ -15,6 +15,9 @@ namespace Currencies
 
         public CurrencyOperation Purchase()
             => Currency.Spend(Amount);
+
+        public CurrencyOperation Receive()
+            => Currency.Add(Amount);
         
         public static implicit operator Currency(Price price)
             => price.Currency;
