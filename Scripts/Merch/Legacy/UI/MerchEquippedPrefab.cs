@@ -17,7 +17,7 @@ namespace Merch.Legacy.UI
         public float ScaleOnGear = 1f;
 
         public MerchItem Item { get; private set; }
-        public GameObject Prefab => Item?.Properties.Prefab.Prefab;
+        public GameObject Prefab => Item?.Properties.Prefab;
         
         public GameObject Equipped { get; private set; }
 

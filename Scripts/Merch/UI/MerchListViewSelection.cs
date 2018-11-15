@@ -24,9 +24,9 @@ namespace Merch.UI
             List.OnSetGroup.AddListener(OnGroup);
             var btn = GetComponent<Button>();
             btn?.onClick.AddListener(Execute);
-            
-            if (_image && Group.Properties.Sprite.Enabled)
-                _image.sprite = Group.Properties.Sprite.Sprite;
+
+            if (_image && Group.Properties.Sprite)
+                _image.sprite = Group.Properties.Sprite;
         }
 
         private void OnGroup(MerchGroup arg0)

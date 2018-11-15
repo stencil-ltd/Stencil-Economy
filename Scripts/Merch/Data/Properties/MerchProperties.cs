@@ -1,6 +1,7 @@
 using System;
 using JetBrains.Annotations;
 using Merch.UI;
+using UnityEngine;
 
 namespace Merch.Data.Properties
 {
@@ -8,11 +9,12 @@ namespace Merch.Data.Properties
     public class MerchProperties
     {
         [CanBeNull] public MerchDisplayPreset DisplayPreset;
-        
-        public MerchPropertyColor Color = new MerchPropertyColor();
-        public MerchPropertySprite Sprite = new MerchPropertySprite();
-        public MerchPropertyMaterial Material = new MerchPropertyMaterial();
-        public MerchPropertyTexture Texture = new MerchPropertyTexture();
-        public MerchPropertyPrefab Prefab = new MerchPropertyPrefab();        
+
+        public bool HasColor;
+        public Color Color;
+        public Sprite Sprite;
+        public Material Material;
+        public Texture Texture;
+        public GameObject Prefab;        
     }
 }
