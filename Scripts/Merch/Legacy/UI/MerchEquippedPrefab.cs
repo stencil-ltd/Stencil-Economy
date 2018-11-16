@@ -56,7 +56,7 @@ namespace Merch.Legacy.UI
                 Debug.Log($"Equip Child: {buyable} (was {Item})");
                 Item = buyable;
                 transform.DestroyAllChildren();
-                Equipped = Instantiate(Prefab, Vector3.zero, Quaternion.identity, transform);
+                Equipped = Instantiate(Prefab, transform);
                 if (!string.IsNullOrEmpty(SpawnName))
                     Equipped.name = SpawnName;
             }
