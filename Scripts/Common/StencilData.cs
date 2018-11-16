@@ -25,6 +25,11 @@ namespace Common
         [CanBeNull]
         public static StencilData Find(string id)
         {
+            if (!_idMap.ContainsKey(id))
+            {
+                Debug.LogError($"Cannot find {id}");
+                return null;
+            }
             return _idMap[id];
         }
 
