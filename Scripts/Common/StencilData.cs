@@ -6,13 +6,16 @@ using UnityEngine;
 namespace Common
 {
     [Serializable]
-    public abstract class StencilData : ScriptableObject
+    public abstract class StencilData : ScriptableObject, INameable, IIdentifiable
     {
         private static Dictionary<string, StencilData> _idMap 
             = new Dictionary<string, StencilData>();
         
         public string Id;
         public string Name;
+
+        public string GetId() => Id;
+        public string GetName() => Name;
 
         public static void Reload()
         {
