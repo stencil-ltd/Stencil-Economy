@@ -10,8 +10,18 @@ namespace Currencies
         public Currency Currency;
         public int Amount;
 
+        public int GetAmount(bool multiply)
+        {
+            var retval = Amount;
+            if (multiply) retval = (int) (retval * Currency.Multiplier());
+            return retval;
+        }
+        
         public bool CanAfford 
             => Currency.CanSpend(Amount);
+
+        public CurrencyOperation Apply(bool negative)
+            => negative ? Purchase() : Receive();
 
         public CurrencyOperation Purchase()
             => Currency.Spend(Amount);
