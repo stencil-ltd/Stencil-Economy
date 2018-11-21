@@ -13,6 +13,7 @@ namespace Merch.Legacy.UI
         public string SpawnName;
         public bool ShowSelected;
         public MerchDisplayConfig Config;
+        public Shader UnownedShader;
 
         public float ScaleOnGear = 1f;
 
@@ -61,7 +62,14 @@ namespace Merch.Legacy.UI
                     Equipped.name = SpawnName;
             }
             transform.localScale = new Vector3(scale, scale, scale);
-            Equipped.GetComponent<MerchDisplay>()?.MerchConfigure(buyable, Config);
+            var listable = Equipped.GetComponent<MerchDisplay>();
+            if (listable)
+            {
+                var config = Config;
+                if (!MerchSystem.Instance.IsAcquired(buyable))
+                    config.OverrideShader = UnownedShader ?? config.OverrideShader;
+                listable.MerchConfigure(buyable, config);
+            }
             OnRefresh?.Invoke();
         }
     }
