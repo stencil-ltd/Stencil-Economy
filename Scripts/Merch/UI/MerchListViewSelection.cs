@@ -43,7 +43,7 @@ namespace Merch.UI
         private void OnItem(object sender, EventArgs e)
         {
             var item = MerchSystem.Instance.Selected;
-            _enabled = _default != _selected || MerchSystem.Instance.IsAcquired(item);
+            _enabled = _default != _selected || item == null || MerchSystem.Instance.IsAcquired(item);
             _image.material = _enabled ? _defaultMaterial : UnavailableMaterial;
             if (_button) _button.enabled = _enabled;
         }
