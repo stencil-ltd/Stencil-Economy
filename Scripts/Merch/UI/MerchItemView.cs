@@ -15,7 +15,7 @@ namespace Merch.UI
         
         public MerchResult Result { get; private set; }
         
-        private void Awake()
+        protected virtual void Awake()
         {
             GetComponent<Button>()?.onClick.AddListener(OnClick);
         }
