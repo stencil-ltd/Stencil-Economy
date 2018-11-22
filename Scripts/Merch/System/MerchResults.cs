@@ -11,5 +11,16 @@ namespace Merch.System
             Query = query;
             Results = results;
         }
+
+        public static bool RoughlyEqual(MerchResults a, MerchResults b)
+        {
+            if (a == null && b == null) return true;
+            if (a == null || b == null) return false;
+            if (a.Results.Count != b.Results.Count) return false;
+            for (var i = 0; i < a.Results.Count; i++)
+                if (!MerchResult.RoughlyEqual(a.Results[i], b.Results[i]))
+                    return false;
+            return true;
+        }
     }
 }

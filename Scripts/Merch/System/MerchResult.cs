@@ -41,5 +41,8 @@ namespace Merch.System
         {
             return $"{nameof(Item)}: {Item}, {nameof(State)}: {State}";
         }
+
+        public static bool RoughlyEqual(MerchResult a, MerchResult b) 
+            => a.Item?.Id == b.Item?.Id;
     }
 }

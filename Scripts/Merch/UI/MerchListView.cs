@@ -71,15 +71,21 @@ namespace Merch.UI
         private void Populate()
         {
             if (Group == null) return;
-            Content.transform.DestroyAllChildren();
             _query = Group.Query().WithLocked(false);
+            var old = _results;
             _results = _query.Execute();
-            foreach (var result in _results.Results)
+            var same = MerchResults.RoughlyEqual(old, _results);
+            if (!same) Content.transform.DestroyAllChildren();
+            for (var i = 0; i < _results.Results.Count; ++i)
             {
-                var listing = Instantiate(ItemViewPrefab, Content.transform);
+                var result = _results.Results[i];
+                MerchItemView listing;
+                if (!same) 
+                    listing = Instantiate(ItemViewPrefab, Content.transform);
+                else 
+                    listing = Content.transform.GetChild(i).GetComponent<MerchItemView>();
                 listing.SetResult(result);
             }
-            
         }
 
         private void OnChange(object sender, EventArgs e)
