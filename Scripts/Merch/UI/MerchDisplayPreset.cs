@@ -12,5 +12,6 @@ namespace Merch.UI
 
         [Header("UI")] 
         public bool FreezeRotation;
+        public bool HideLocked;
     }
 }

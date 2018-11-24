@@ -27,8 +27,9 @@ namespace Merch.System
             return price;
         }
         
-        public bool CanPurchase(MerchItem item, Currency currency)
+        public bool CanPurchase(MerchItem item, [CanBeNull] Currency currency)
         {
+            if (currency == null) return false;
             var price = FindPrice(item, currency);
             return price != null && currency.CanSpend(price.Amount);
         }

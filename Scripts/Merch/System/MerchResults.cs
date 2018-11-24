@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Merch.System
 {
-    public class MerchResults
+    public class MerchResults : IReadOnlyList<MerchResult>
     {
         public readonly MerchQuery Query;
         public readonly IReadOnlyList<MerchResult> Results;
@@ -11,6 +12,11 @@ namespace Merch.System
             Query = query;
             Results = results;
         }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public IEnumerator<MerchResult> GetEnumerator() => Results.GetEnumerator();
+        public int Count => Results.Count;
+        public MerchResult this[int index] => Results[index];
 
         public static bool RoughlyEqual(MerchResults a, MerchResults b)
         {

@@ -45,7 +45,6 @@ namespace Merch.System
 
         public bool IsLocked(MerchItem item)
         {
-            if (!item.Unlockable) return false;
             var group = GetGroup(item);
             return group != null && group.Lockable && LockedInternal(item);
         }

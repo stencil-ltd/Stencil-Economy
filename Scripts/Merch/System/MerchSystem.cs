@@ -87,7 +87,10 @@ namespace Merch.System
         {
             item.Group = group;
             if (_itemMap.ContainsKey(item.Id))
-                throw new Exception($"Duplicate Item Id! [{_itemMap[item.Id]} and {item}]");
+            {
+                Debug.LogError($"Duplicate Item Id! [{_itemMap[item.Id]} and {item}]");
+                return;
+            }
             _itemMap[item.Id] = item;
         }
 
@@ -96,23 +99,18 @@ namespace Merch.System
             _skipSave = true;
             foreach (var grant in _itemToGrant.Values)
             {
-                switch (grant.Type)
-                {
-                    case MerchGrant.GrantType.Equip:
-                        SetLocked(grant, false);
-                        SetAcquired(grant, true);
-                        SetEquipped(grant, true);
-                        break;
-                    case MerchGrant.GrantType.Acquire:
-                        SetLocked(grant, false);
-                        SetAcquired(grant, true);
-                        break;
-                    case MerchGrant.GrantType.Unlock:
-                        SetLocked(grant, false);
-                        break;
-                }
+                SetLocked(grant, false);
+                SetAcquired(grant, true);
             }
 
+            var all = new MerchQuery().WithAcquired(true).Execute();
+            foreach (var merchResult in all)
+            {
+                var group = merchResult.Item.Group;
+                if (group.RequiredEquip && GetEquippedSingle(group) == null)
+                    SetEquipped(merchResult.Item, true);
+            }
+            
             _skipSave = false;
             Save();
         }

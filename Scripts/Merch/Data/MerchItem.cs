@@ -12,14 +12,13 @@ namespace Merch.Data
     [CreateAssetMenu(menuName = "Economy/Merch Item")]
     public class MerchItem : StencilData
     {
-        public bool Unlockable;
         public MerchProperties Properties = new MerchProperties();
 
         [NonSerialized] 
         public MerchGroup Group;
 
         [CanBeNull] public MerchDisplayPreset GetBestPreset()
-            => Properties.DisplayPreset ?? Group.Properties.DisplayPreset;
+            => Properties?.DisplayPreset ?? Group.Properties.DisplayPreset;
         
         public event EventHandler OnChange;
         public void NotifyChanged()
