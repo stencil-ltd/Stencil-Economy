@@ -17,6 +17,7 @@ namespace Merch.UI
         
         public MerchGroup Group;
         public MerchItemView ItemViewPrefab;
+        public GameObject SuffixPrefab;
         public LayoutGroup Content;
         public bool ClearSelectedOnExit = true;
 
@@ -24,6 +25,7 @@ namespace Merch.UI
 
         private MerchQuery _query;
         private MerchResults _results;
+        private GameObject _suffix;
 
         private void OnEnable()
         {
@@ -75,16 +77,32 @@ namespace Merch.UI
             var old = _results;
             _results = _query.Execute();
             var same = MerchResults.RoughlyEqual(old, _results);
-            if (!same) Content.transform.DestroyAllChildren();
+            if (!same)
+            {
+                Content.transform.DestroyAllChildren();
+                if (_suffix)
+                {
+                    Destroy(_suffix.gameObject);
+                    _suffix = null;
+                }
+            }
+            var allAcquired = true;
             for (var i = 0; i < _results.Results.Count; ++i)
             {
                 var result = _results.Results[i];
+                if (!result.State.Acquired)
+                    allAcquired = false;
                 MerchItemView listing;
                 if (!same) 
                     listing = Instantiate(ItemViewPrefab, Content.transform);
                 else 
                     listing = Content.transform.GetChild(i).GetComponent<MerchItemView>();
                 listing.SetResult(result);
+            }
+
+            if (!same && !allAcquired && SuffixPrefab != null)
+            {
+                _suffix = Instantiate(SuffixPrefab, Content.transform);
             }
         }
 
