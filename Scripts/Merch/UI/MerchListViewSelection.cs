@@ -23,6 +23,7 @@ namespace Merch.UI
         
         [Bind] private Image _image;
         [Bind] private Button _button;
+        [Bind] private Animator _animator;
 
         private bool _enabled = true;
 
@@ -38,6 +39,8 @@ namespace Merch.UI
 
             if (_image && Group.Properties.Sprite)
                 _image.sprite = Group.Properties.Sprite;
+            
+            RefreshSelection();
         }
 
         private void OnItem(object sender, EventArgs e)
@@ -51,7 +54,7 @@ namespace Merch.UI
         private void OnGroup(MerchGroup arg0)
         {
             _selected = arg0;
-            Selection?.SetActive(Group == arg0);
+            RefreshSelection();
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -63,6 +66,12 @@ namespace Merch.UI
         {
             if (!_enabled) return;
             List.SetGroup(List.Group == Group ? _default : Group);
+        }
+
+        private void RefreshSelection()
+        {
+            if (Selection) Selection.SetActive(Group == _selected);
+            if (_animator) _animator.SetBool("Selected", _selected);
         }
     }
 }
