@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.Eventing.Reader;
 using Binding;
 using Merch.Data;
 using Merch.System;
