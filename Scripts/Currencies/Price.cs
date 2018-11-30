@@ -8,12 +8,12 @@ namespace Currencies
     {
         [Tooltip("Null if IAP.")]
         public Currency Currency;
-        public int Amount;
+        public long Amount;
 
-        public int GetAmount(bool multiply)
+        public long GetAmount(bool multiply)
         {
             var retval = Amount;
-            if (multiply) retval = (int) (retval * Currency.Multiplier());
+            if (multiply) retval = (long) (retval * Currency.Multiplier());
             return retval;
         }
         
