@@ -12,36 +12,36 @@ namespace Merch.System
             => $"merch_{name}_{id}";
         
         private bool LockedInternal(MerchItem item) 
-            => PlayerPrefsX.GetBool(GetKey("locked", item.Id), true);
+            => Prefs.GetBool(GetKey("locked", item.Id), true);
         private void SetLockedInternal(MerchItem item, bool locked)
-            => PlayerPrefsX.SetBool(GetKey("locked", item.Id), locked);
+            => Prefs.SetBool(GetKey("locked", item.Id), locked);
         
         private bool AcquiredInternal(MerchItem item) 
-            => PlayerPrefsX.GetBool(GetKey("acquired", item.Id));
+            => Prefs.GetBool(GetKey("acquired", item.Id));
         private void SetAcquiredInternal(MerchItem item, bool locked)
-            => PlayerPrefsX.SetBool(GetKey("acquired", item.Id), locked);
+            => Prefs.SetBool(GetKey("acquired", item.Id), locked);
         
         private bool EquippedMulti(MerchItem item) 
-            => PlayerPrefsX.GetBool(GetKey("equipped_multi", item.Id));
+            => Prefs.GetBool(GetKey("equipped_multi", item.Id));
         private void SetEquippedMulti(MerchItem item, bool locked)
-            => PlayerPrefsX.SetBool(GetKey("equipped_multi", item.Id), locked);
+            => Prefs.SetBool(GetKey("equipped_multi", item.Id), locked);
 
         [CanBeNull]
         private MerchItem EquippedSingle(MerchGroup group)
         {
-            var id = PlayerPrefs.GetString(GetKey("equipped_single", group.Id));
+            var id = Prefs.GetString(GetKey("equipped_single", group.Id));
             return id == null ? null : Find(id);
         }
 
         private void RemoveEquippedSingle(MerchGroup group)
         {
-            PlayerPrefs.DeleteKey(GetKey("equipped_single", group.Id));
+            Prefs.DeleteKey(GetKey("equipped_single", group.Id));
         }
 
         private void SetEquippedSingle([NotNull] MerchItem item)
         {
             var group = GetGroup(item);
-            PlayerPrefs.SetString(GetKey("equipped_single", group.Id), item.Id);
+            Prefs.SetString(GetKey("equipped_single", group.Id), item.Id);
         }
     }
 }

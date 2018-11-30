@@ -129,7 +129,7 @@ namespace Merch.System
         private void Save(params MerchItem[] items)
         {
             if (_skipSave) return;
-            PlayerPrefs.Save();
+            Prefs.Save();
             Notify(items);
         }
         

@@ -4,6 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Merch.Data;
 using Plugins.Data;
+using Scripts.Prefs;
 using UnityEngine;
 using Util;
 
@@ -39,6 +40,7 @@ namespace Merch.System
 
         [CanBeNull] public MerchItem Selected { get; private set; }
 
+        public StencilPrefs Prefs = StencilPrefs.Default;
         public event EventHandler OnChange;
 
         public MerchSystem()
@@ -75,11 +77,11 @@ namespace Merch.System
                 }
             }
 
-            if (!PlayerPrefsX.GetBool("merch_system_init"))
+            if (!Prefs.GetBool("merch_system_init"))
             {
                 ApplyGrants();
-                PlayerPrefsX.SetBool("merch_system_init", true);
-                PlayerPrefs.Save();
+                Prefs.SetBool("merch_system_init", true);
+                Prefs.Save();
             }
         }
 
