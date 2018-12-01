@@ -10,6 +10,16 @@ namespace Currencies
         public Currency Currency;
         public long Amount;
 
+        public Price()
+        {
+        }
+
+        public Price(Currency currency, long amount)
+        {
+            Currency = currency;
+            Amount = amount;
+        }
+
         public long GetAmount(bool multiply)
         {
             var retval = Amount;
