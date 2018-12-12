@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Common;
 using Currencies;
 
@@ -11,7 +12,7 @@ namespace Merch.System
         public bool Equipped;
         
         public Price MainPrice;
-        public PriceArray ExtraPrices;
+        public List<Price> ExtraPrices;
 
         public override string ToString()
         {

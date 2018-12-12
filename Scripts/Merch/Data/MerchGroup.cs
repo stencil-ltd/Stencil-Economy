@@ -1,6 +1,5 @@
 using System;
-using Common;
-using Malee;
+using System.Collections.Generic;
 using Merch.Data.Properties;
 using State;
 using UnityEngine;
@@ -18,11 +17,9 @@ namespace Merch.Data
 
         public MerchProperties Properties = new MerchProperties();
         
-        [Reorderable]
-        public GrantArray Grants;
+        public List<MerchGrant> Grants;
         
-        [Reorderable]
-        public ListingArray Listings;
+        public List<MerchListing> Listings;
 
         public event EventHandler OnChange;
         public void NotifyChanged()

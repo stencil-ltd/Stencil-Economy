@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Common;
 using Currencies;
 
@@ -9,7 +10,7 @@ namespace Merch.Data
     {
         public MerchItem Item;
         public Price MainPrice;
-        public PriceArray ExtraPrices;
+        public List<Price> ExtraPrices;
         
         public static implicit operator MerchItem(MerchListing listing) 
             => listing.Item;
