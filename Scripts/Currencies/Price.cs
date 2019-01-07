@@ -8,22 +8,22 @@ namespace Currencies
     {
         [Tooltip("Null if IAP.")]
         public Currency Currency;
-        public long Amount;
+        public ulong Amount;
 
         public Price()
         {
         }
 
-        public Price(Currency currency, long amount)
+        public Price(Currency currency, ulong amount)
         {
             Currency = currency;
             Amount = amount;
         }
 
-        public long GetAmount(bool multiply)
+        public ulong GetAmount(bool multiply)
         {
             var retval = Amount;
-            if (multiply) retval = (long) (retval * Currency.Multiplier());
+            if (multiply) retval = (ulong) (retval * Currency.Multiplier());
             return retval;
         }
         

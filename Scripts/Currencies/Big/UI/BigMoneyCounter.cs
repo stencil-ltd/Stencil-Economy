@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Lobbing;
 using Scripts.Util;
 using UnityEngine;
+using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.UI;
 using Util;
 
@@ -36,8 +37,6 @@ namespace Currencies
         public Image icon;
         public Text text;
         
-        private Coroutine _co;
-
         private void Awake()
         {
             this.Bind();
@@ -98,12 +97,7 @@ namespace Currencies
 
         private void OnChange(object sender, IMoney<UInt128> money)
         {
-            if (_co != null) StopCoroutine(_co);
-            
-            if (customFormatter == NumberFormats.Format.None)
-                _co = StartCoroutine(text.LerpAmount(String, format, Amount, 1f));
-            else 
-                _co = StartCoroutine(text.LerpAmount(String, customFormatter, Amount, 1f));
+            UpdateText();
         }
 
         private void UpdateText()
