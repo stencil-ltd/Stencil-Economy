@@ -1,5 +1,6 @@
 using Analytics;
 using Dirichlet.Numerics;
+using State;
 using UnityEngine;
 
 namespace Currencies.Big
@@ -8,7 +9,7 @@ namespace Currencies.Big
     {
         public override UInt128 Spendable() => Total() - Staged();
 
-        public override MoneyOperation<UInt128> Add(UInt128 amount, bool staged)
+        public override MoneyOperation<UInt128> Add(UInt128 amount, bool staged = false)
         {
             if (amount == 0) return Unchanged();
             if (amount < 0) return Fail();
@@ -22,7 +23,7 @@ namespace Currencies.Big
             return Succeed();
         }
 
-        public override MoneyOperation<UInt128> Spend(UInt128 amount, bool staged)
+        public override MoneyOperation<UInt128> Spend(UInt128 amount, bool staged = false)
         {
             var total = Total();
             var spendable = Spendable();

@@ -19,8 +19,8 @@ namespace Currencies
         T Lifetime();
         
         /** Operations **/
-        MoneyOperation<T> Add(T amount, bool staged);
-        MoneyOperation<T> Spend(T amount, bool staged);
+        MoneyOperation<T> Add(T amount, bool staged = false);
+        MoneyOperation<T> Spend(T amount, bool staged = false);
         MoneyOperation<T> Commit(T amount);
 
         /** Utility **/

@@ -34,9 +34,9 @@ namespace Currencies
 
         public abstract T Spendable();
 
-        public abstract MoneyOperation<T> Add(T amount, bool staged);
+        public abstract MoneyOperation<T> Add(T amount, bool staged = false);
 
-        public abstract MoneyOperation<T> Spend(T amount, bool staged);
+        public abstract MoneyOperation<T> Spend(T amount, bool staged = false);
 
         public abstract MoneyOperation<T> Commit(T amount);
     }
