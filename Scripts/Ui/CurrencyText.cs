@@ -18,11 +18,11 @@ namespace Ui
         {
             this.Bind();
             _text = _text ?? gameObject.AddComponent<BigNumberText>();
-            _text.Set(currency.Spendable());
         }
 
         private void OnEnable()
         {
+            _text.Set(currency.Spendable());
             currency.OnSpendableChanged += OnChange;
         }
 
