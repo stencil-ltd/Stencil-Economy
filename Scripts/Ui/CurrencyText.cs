@@ -31,9 +31,9 @@ namespace Ui
             currency.OnSpendableChanged -= OnChange;
         }
         
-        private void OnChange(object sender, Currency e)
+        private void OnChange(object sender, CurrencyEvent currencyEvent)
         {
-            _text.Lerp(e.Spendable());
+            _text.Lerp(currencyEvent.to);
         }
     }
 }
