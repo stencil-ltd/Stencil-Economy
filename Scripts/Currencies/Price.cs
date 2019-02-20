@@ -1,4 +1,6 @@
 using System;
+using Dirichlet.Numerics;
+using Scripts.Maths;
 using UnityEngine;
 
 namespace Currencies
@@ -8,36 +10,43 @@ namespace Currencies
     {
         [Tooltip("Null if IAP.")]
         public Currency Currency;
-        public ulong Amount;
+        
+        [SerializeField]
+        private ulong Amount;
+        
+        [SerializeField]
+        [HideInInspector]
+        private UInt128 BigAmount;
+
+        public UInt128 GetAmount() => BigAmount.AtLeast(Amount);
+        public void SetAmount(UInt128 amount) => BigAmount = amount;
 
         public Price()
         {
         }
 
-        public Price(Currency currency, ulong amount)
+        public void Sync()
         {
-            Currency = currency;
-            Amount = amount;
+            BigAmount = Amount;
         }
 
-        public ulong GetAmount(bool multiply)
+        public Price(Currency currency, UInt128 amount)
         {
-            var retval = Amount;
-            if (multiply) retval = (ulong) (retval * Currency.Multiplier());
-            return retval;
+            Currency = currency;
+            BigAmount = amount;
         }
         
         public bool CanAfford 
-            => Currency.CanSpend(Amount);
+            => Currency.CanSpend(BigAmount);
 
         public CurrencyOperation Apply(bool negative)
             => negative ? Purchase() : Receive();
 
         public CurrencyOperation Purchase()
-            => Currency.Spend(Amount);
+            => Currency.Spend(BigAmount);
 
         public CurrencyOperation Receive()
-            => Currency.Add(Amount);
+            => Currency.Add(BigAmount);
         
         public static implicit operator Currency(Price price)
             => price.Currency;

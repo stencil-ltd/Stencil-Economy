@@ -31,14 +31,14 @@ namespace Merch.System
         {
             if (currency == null) return false;
             var price = FindPrice(item, currency);
-            return price != null && currency.CanSpend(price.Amount);
+            return price != null && currency.CanSpend(price.GetAmount());
         }
 
         public bool AttemptPurchase(MerchItem item, Currency currency)
         {
             var price = FindPrice(item, currency);
             if (price == null) return false;
-            var op = currency.Spend(price.Amount);
+            var op = currency.Spend(price.GetAmount());
             if (!op.Success) return false;
             SetAcquired(item, true);
             op.AndSave();
