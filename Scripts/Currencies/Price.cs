@@ -19,15 +19,14 @@ namespace Currencies
         private UInt128 BigAmount;
 
         public UInt128 GetAmount() => BigAmount.AtLeast(Amount);
-        public void SetAmount(UInt128 amount) => BigAmount = amount;
+        public void SetAmount(UInt128 amount)
+        {
+            BigAmount = amount;
+            Amount = 0;
+        }
 
         public Price()
         {
-        }
-
-        public void Sync()
-        {
-            BigAmount = Amount;
         }
 
         public Price(Currency currency, UInt128 amount)
@@ -37,16 +36,16 @@ namespace Currencies
         }
         
         public bool CanAfford 
-            => Currency.CanSpend(BigAmount);
+            => Currency.CanSpend(GetAmount());
 
         public CurrencyOperation Apply(bool negative)
             => negative ? Purchase() : Receive();
 
         public CurrencyOperation Purchase()
-            => Currency.Spend(BigAmount);
+            => Currency.Spend(GetAmount());
 
         public CurrencyOperation Receive()
-            => Currency.Add(BigAmount);
+            => Currency.Add(GetAmount());
         
         public static implicit operator Currency(Price price)
             => price.Currency;
