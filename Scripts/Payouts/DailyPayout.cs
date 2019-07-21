@@ -1,12 +1,15 @@
 using System;
 using Scripts.Maths;
 using Scripts.Prefs;
+using Scripts.RemoteConfig;
 
 namespace Scripts.Payouts
 {
     public class DailyPayout
     {
         public readonly string key;
+        public readonly TimeSpan interval;
+        public readonly bool prod;
         
         public DateTime? LastPayout
         {
@@ -17,23 +20,30 @@ namespace Scripts.Payouts
         public DailyPayout(string key)
         {
             this.key = key;
+            prod = StencilRemote.IsProd();
+            interval = prod ? TimeSpan.FromDays(1) : TimeSpan.FromMinutes(5);
         }
 
         public int Peek()
         {
-            var date = DateTime.Today;
-            var last = LastPayout ?? DateTime.Today.AddDays(-1); // default to yesterday.
-            return (date - last).Days.AtLeast(0);
+            var date = Now();
+            var last = LastPayout ?? date - interval; // default to yesterday.
+            return (int) ((date - last).Ticks / interval.Ticks).AtLeast(0);
         }
 
         public void Mark()
         {
-            LastPayout = DateTime.Today;
+            LastPayout = Now();
         }
 
         public void Clear()
         {
             LastPayout = null;
+        }
+
+        private DateTime Now()
+        {
+            return prod ? DateTime.Today : DateTime.Now;
         }
     }
 }
