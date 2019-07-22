@@ -10,6 +10,8 @@ namespace Scripts.Payouts
         public readonly string key;
         public readonly TimeSpan interval;
         public readonly bool prod;
+
+        public int maxMult = 7;
         
         public DateTime? LastPayout
         {
@@ -28,7 +30,8 @@ namespace Scripts.Payouts
         {
             var date = Now();
             var last = LastPayout ?? date - interval; // default to yesterday.
-            return (int) ((date - last).Ticks / interval.Ticks).AtLeast(0);
+            var mult = (int) ((date - last).Ticks / interval.Ticks).AtLeast(0).AtMost(maxMult);
+            return mult;
         }
 
         public void Mark()
