@@ -1,15 +1,13 @@
 ﻿using Binding;
-using Currencies.Big;
-using Dirichlet.Numerics;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Currencies.UI
 {
     [RequireComponent(typeof(Image))]
-    public class BigMoneyIcon : MonoBehaviour
+    public class CurrencyIcon : MonoBehaviour
     {
-        public BigMoney money;
+        public Currency Currency;
 
         [Bind]
         private Image _image;
@@ -17,7 +15,7 @@ namespace Currencies.UI
         private void Awake()
         {
             this.Bind();
-            money.OnSpendableChanged += OnChange;
+            Currency.OnSpendableChanged += OnChange;
         }
 
         private void OnEnable()
@@ -27,17 +25,17 @@ namespace Currencies.UI
 
         private void OnDestroy()
         {
-            money.OnSpendableChanged -= OnChange;
+            Currency.OnSpendableChanged -= OnChange;
         }
 
-        private void OnChange(object sender, IMoney<UInt128> money1)
+        private void OnChange(object sender, CurrencyEvent currencyEvent)
         {
             MyUpdate();
         }
 
         private void MyUpdate()
         {
-            _image.sprite = money.Sprite();   
+            _image.sprite = Currency.BestSprite();   
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using Binding;
-using Currencies.Big;
 using Dirichlet.Numerics;
 using JetBrains.Annotations;
 using Lobbing;
@@ -13,17 +12,18 @@ using Util;
 namespace Currencies.UI
 {
     [RequireComponent(typeof(Button))]
-    public class BigMoneyButton : MonoBehaviour
+    public class CurrencyButton : MonoBehaviour
     {
         [Header("Configure")]
-        public BigPrice price;
-        public bool disableOnFail;
-        public NumberFormats.Format numberFormat;
+        public Price Price;
+        public bool DisableOnFail;
+        public NumberFormats.Format NumberFormat;
 
         [Header("UI")] 
-        public Text amountText;
-        public BigPriceEvent success;
-        public BigPriceEvent failure;
+        public Text AmountText;
+        [CanBeNull] public Lobber Lobber;
+        public PriceEvent OnSuccess;
+        public PriceEvent OnFailure;
         
         [Bind] 
         public Button button { get; private set; }
@@ -33,7 +33,7 @@ namespace Currencies.UI
 
         public UInt128 Amount
         {
-            get => price.amount;
+            get => Price.GetAmount();
             set => SetAmount(value);
         }
 
@@ -46,8 +46,8 @@ namespace Currencies.UI
 
         private void Update()
         {
-            var canAfford = price.CanAfford;
-            if (disableOnFail)
+            var canAfford = Price.CanAfford;
+            if (DisableOnFail)
                 button.enabled = canAfford; 
             if (_canvasGroup != null) 
                 _canvasGroup.alpha = canAfford ? 1 : 0.5f;
@@ -55,37 +55,44 @@ namespace Currencies.UI
 
         private void Purchase()
         {
-            if (price.amount == 0) return;
-            if (price.Purchase().AndSave())
+            if (Price.GetAmount() == 0) return;
+            if (Price.Purchase().AndSave())
                 Objects.StartCoroutine(Success());
-            else failure?.Invoke(price);
+            else OnFailure?.Invoke(Price);
         }
 
         private IEnumerator Success()
         {
-            success?.Invoke(price);
-            yield break;
+            if (Lobber)
+            {
+                var overrides = new LobOverrides
+                {
+                    From = AmountText.transform
+                };
+                yield return Objects.StartCoroutine(Lobber?.LobMany((ulong) Price.GetAmount(), overrides));
+            }
+            OnSuccess?.Invoke(Price);
         }
 
         public void SetAmount(UInt128 amount)
         {
-            price.amount = amount;
+            Price.SetAmount(amount);
             RefreshUi();
         }
 
-        public void SetPrice(BigPrice price)
+        public void SetPrice(Price price)
         {
-            this.price = price;
+            Price = price;
             RefreshUi();
         }
 
         private void RefreshUi()
         {
-            if (amountText)
-                amountText.text = $"x{Format(price)}";
+            if (AmountText)
+                AmountText.text = $"x{Format(Price)}";
         }
 
-        protected virtual string Format(BigPrice price)
-            => numberFormat.FormatAmount(price.amount);
+        protected virtual string Format(Price price)
+            => NumberFormat.FormatAmount(price.GetAmount());
     }
 }
