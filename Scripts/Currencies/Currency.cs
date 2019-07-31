@@ -8,6 +8,7 @@ using Scripts.Prefs;
 using UnityEngine;
 
 #if STENCIL_ANALYTICS
+using Binding;
 using Scripts.RemoteConfig;
 using Analytics;
 #endif
