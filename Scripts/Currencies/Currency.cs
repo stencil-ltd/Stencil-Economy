@@ -1,31 +1,40 @@
 ﻿using System;
 using System.Linq;
-using Analytics;
-using Binding;
 using Common;
 using Dirichlet.Numerics;
 using JetBrains.Annotations;
 using Plugins.Data;
-using Scripts.Maths;
 using Scripts.Prefs;
-using Scripts.RemoteConfig;
 using UnityEngine;
-using Util;
+
+#if STENCIL_ANALYTICS
+using Scripts.RemoteConfig;
+using Analytics;
+#endif
 
 namespace Currencies
 {
     [CreateAssetMenu(menuName = "New Currency")]
-    public partial class Currency : ScriptableObject, INameable, IRemoteId
+    public partial class Currency : ScriptableObject, INameable
+        #if STENCIL_ANALYTICS
+        , IRemoteId
+        #endif
     {
         public string Name;
 
+#if STENCIL_ANALYTICS
         [RemoteField("currency_max")]
+#endif
         public long Max = -1;
 
+        #if STENCIL_ANALYTICS
         [RemoteField("currency_start")]
+#endif
         public ulong StartAmount = 0;
 
+        #if STENCIL_ANALYTICS
         [RemoteField("currency_force")]
+#endif
         public long ForceAmount = -1;
 
         public Sprite ColorSprite;
@@ -75,7 +84,9 @@ namespace Currencies
         
         private void OnEnable()
         {
+            #if STENCIL_ANALYTICS
             if (Application.isPlaying) this.BindRemoteConfig();
+            #endif
             CurrencyManager.Instance.Register(this);
             InitializeData(false);
             ResetButton.OnGlobalReset += (sender, args) => Clear();
@@ -157,7 +168,10 @@ namespace Currencies
             SetTotal(total - amount);
             AmountsChanged(oldTotal, oldSpendable);
             if (!Silent) Debug.Log($"Spend {Name} x{amount}");
+            
+            #if STENCIL_ANALYTICS
             Tracking.Instance.Track($"spend_{Name}", "amount", amount);
+            #endif
             return Succeed();
         }
 
@@ -202,8 +216,10 @@ namespace Currencies
 
         private void UpdateTracking()
         {
+            #if STENCIL_ANALYTICS
             Tracking.Instance.SetUserProperty(Name, Total());
             Tracking.Instance.SetUserProperty($"{Name}_lifetime", Lifetime());
+            #endif
         }
 
         private void AmountsChanged(UInt128 oldTotal, UInt128 oldSpendable)
