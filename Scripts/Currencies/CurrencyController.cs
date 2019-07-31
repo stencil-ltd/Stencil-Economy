@@ -8,7 +8,7 @@ using Util;
 namespace Currencies
 {
     [ExecuteInEditMode]
-    public class CurrencyController : Permanent<CurrencyController>
+    public class CurrencyController : PermanentV2<CurrencyController>
     {
         public bool SaveOnWrite;
         
