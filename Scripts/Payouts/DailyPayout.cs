@@ -9,8 +9,6 @@ namespace Scripts.Payouts
     {
         public readonly string key;
         public readonly TimeSpan interval;
-        public readonly bool prod;
-        public readonly bool shorten;
 
         public int maxMult = 7;
         
@@ -23,12 +21,7 @@ namespace Scripts.Payouts
         public DailyPayout(string key)
         {
             this.key = key;
-            prod = StencilRemote.IsProd();
-            shorten = !prod;
-            #if !UNITY_ANDROID
-            shorten = false;
-            #endif
-            interval = !shorten ? TimeSpan.FromDays(1) : TimeSpan.FromMinutes(5);
+            interval = TimeSpan.FromDays(1);
         }
 
         public int Peek()
@@ -51,7 +44,7 @@ namespace Scripts.Payouts
 
         private DateTime Now()
         {
-            return !shorten ? DateTime.Today : DateTime.Now;
+            return DateTime.Now;
         }
     }
 }
