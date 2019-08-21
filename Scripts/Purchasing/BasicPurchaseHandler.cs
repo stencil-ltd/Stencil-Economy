@@ -1,12 +1,13 @@
+#if UNITY_PURCHASING
 using System;
 using Currencies;
 using Dirichlet.Numerics;
 using Scripts.Prefs;
 using Scripts.Tenjin.Abstraction;
+using Store;
 using UI;
 using UnityEngine;
 using UnityEngine.Purchasing;
-using Price = UnityEngine.Purchasing.Price;
 
 namespace Scripts.Purchasing
 {
@@ -25,6 +26,8 @@ namespace Scripts.Purchasing
         }
         
         public static event EventHandler<Currencies.Price> OnConsumable;
+        public static event EventHandler<Product> OnPurchase;
+        
         private IAPListener _listener;
         
         public override void Register()
@@ -65,6 +68,8 @@ namespace Scripts.Purchasing
             CurrencyManager.Instance.Save();
             TenjinProduct.Get(product).TrackPurchase();
             
+            OnPurchase?.Invoke(this, product);
+            
             Count++;
             Last = DateTime.UtcNow;
         }
@@ -76,3 +81,4 @@ namespace Scripts.Purchasing
         
     }
 }
+#endif
