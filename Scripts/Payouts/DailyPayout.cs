@@ -29,7 +29,17 @@ namespace Scripts.Payouts
         {
             var date = Now();
             var last = LastPayout ?? date - interval; // default to yesterday.
-            var mult = (int) ((date - last).Ticks / interval.Ticks).AtLeast(0).AtMost(maxMult);
+            var diff = date - last;
+            
+            // we're going to either take the raw number of intervals that have passed (i.e. whole spans of 24h)...
+            var tickmult = (int) (diff.Ticks / interval.Ticks);
+            
+            // or we're going to take the number of calendar days that have passed. 
+            var daymult = (int) diff.TotalDays;
+            
+            // Whichever is most generous.
+            var mult = Math.Max(tickmult, daymult).AtLeast(0).AtMost(maxMult);
+            
             return mult;
         }
 
