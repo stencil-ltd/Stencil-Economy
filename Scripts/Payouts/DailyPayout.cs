@@ -10,7 +10,7 @@ namespace Scripts.Payouts
         public readonly string key;
         public readonly TimeSpan interval;
 
-        public int maxMult = 7;
+        public readonly int maxMult;
         
         public DateTime? LastPayout
         {
@@ -18,9 +18,10 @@ namespace Scripts.Payouts
             set => StencilPrefs.Default.SetDateTime($"daily_payout_{key}", value).Save();
         }
 
-        public DailyPayout(string key)
+        public DailyPayout(string key, int maxMult = 7)
         {
             this.key = key;
+            this.maxMult = maxMult;
             interval = TimeSpan.FromDays(1);
         }
 
