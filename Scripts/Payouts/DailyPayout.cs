@@ -2,6 +2,7 @@ using System;
 using Scripts.Maths;
 using Scripts.Prefs;
 using Scripts.RemoteConfig;
+using UnityEngine;
 
 namespace Scripts.Payouts
 {
@@ -28,7 +29,7 @@ namespace Scripts.Payouts
         public int Peek()
         {
             var date = Now();
-            var last = LastPayout ?? date - interval; // default to yesterday.
+            var last = LastPayout ?? (date - interval); // default to yesterday.
             var diff = date - last;
             
             // we're going to either take the raw number of intervals that have passed (i.e. whole spans of 24h)...
@@ -39,7 +40,8 @@ namespace Scripts.Payouts
             
             // Whichever is most generous.
             var mult = Math.Max(tickmult, daymult).AtLeast(0).AtMost(maxMult);
-            
+
+            Debug.Log($"DailyPayout: {tickmult} vs {daymult} = {mult}. Last payout was {last}");
             return mult;
         }
 
