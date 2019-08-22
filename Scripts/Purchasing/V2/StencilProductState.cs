@@ -14,21 +14,6 @@ namespace Stencil.Economy.Purchasing
 {
     public class StencilProductState : IStencilProductState
     {
-        public static string CustomReportingBaseUrl { get; private set; } = null;
-        public static HttpClient CustomReportingClient { get; private set; } = null;
-
-        public static void Initialize(string customReportingBaseUrl = null)
-        {
-            CustomReportingBaseUrl = customReportingBaseUrl;
-            CustomReportingClient = null;
-            if (customReportingBaseUrl != null)
-            {
-                CustomReportingClient = new HttpClient();
-                CustomReportingClient.BaseAddress = new Uri(CustomReportingBaseUrl);
-                CustomReportingClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            }
-        }
-        
         public static IStencilProductState Get(Product product)
         {
             #if UNITY_EDITOR

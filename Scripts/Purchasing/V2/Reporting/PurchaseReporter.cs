@@ -1,3 +1,6 @@
+
+using System;
+using System.Net.Http.Headers;
 #if UNITY_PURCHASING
 using System.Globalization;
 using System.Linq;
@@ -21,29 +24,43 @@ namespace Stencil.Economy.Purchasing.Reporting
     {
         private static readonly string googleEndpoint = "googleRegisterPurchase";
         private static readonly string appleEndpoint = "appleRegisterPurchase";
-        
+
+        public static HttpClient client { get; private set; }
+        public static string AdId { get; private set; }
+
+        private static bool _init;
+
         public readonly Product product;
-        public readonly HttpClient client;
 
-        private string _adId = null;
 
-        public PurchaseReporter(Product product, HttpClient client)
+        public static void Initialize(string url)
+        {
+            _init = true;
+            client.BaseAddress = new Uri(url);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            Application.RequestAdvertisingIdentifierAsync((id, enabled, msg) => AdId = id);
+        }
+
+        public static PurchaseReporter Get(Product product)
+        {
+            return _init ? new PurchaseReporter(product) : null;
+        }
+
+        public PurchaseReporter(Product product)
         {
             this.product = product;
-            this.client = client;
-            Application.RequestAdvertisingIdentifierAsync((id, enabled, msg) => _adId = id);
         }
 
         private async UniTask<RegisterPayload> CreatePayload(string receipt)
         {
-            await UniTask.WaitWhile(() => _adId == null);
+            await UniTask.WaitWhile(() => AdId == null);
             var locale = CultureInfo.CurrentCulture.DisplayName;
             return new RegisterPayload
             {
                 product_id = product.definition.id,
                 price = (double) product.metadata.localizedPrice,
                 receipt = receipt,
-                advertising_id = _adId,
+                advertising_id = AdId,
                 bundle_id = Application.identifier,
                 country = locale.Split('-').Last(),
                 currency = product.metadata.isoCurrencyCode,

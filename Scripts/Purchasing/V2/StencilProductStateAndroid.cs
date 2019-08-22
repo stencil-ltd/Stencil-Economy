@@ -32,8 +32,9 @@ namespace Stencil.Economy.Purchasing
         {
             try
             {
-                var response = await new PurchaseReporter(product, CustomReportingClient)
-                    .ReportAndroid(receipt, signature);
+                var report = PurchaseReporter.Get(product);
+                if (report == null) return;
+                var response = await report.ReportAndroid(receipt, signature);
                 if (response?.IsSuccessStatusCode != false)
                 {
                     Debug.Log($"Tenjin: Successfully registered purchase with firebase.");                    
