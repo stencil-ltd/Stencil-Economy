@@ -1,18 +1,16 @@
 using System;
 using Analytics;
-using Currencies;
-using Dirichlet.Numerics;
-using Purchasing;
 using Scripts.Payouts;
 using Scripts.Prefs;
+using Scripts.Purchasing;
 using Scripts.Tenjin.Abstraction;
 using UI;
 using UniRx.Async;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using Util;
-using Util.Commerce;
 using Price = Currencies.Price;
+using StencilIap = Purchasing.StencilIap;
 
 namespace Stencil.Subscriptions
 {
@@ -30,7 +28,6 @@ namespace Stencil.Subscriptions
         public string key = "subscription_coins";
         public string productId;
         public Product product;
-        public Currency[] payoutCurrencies = { CurrencyManager.Instance.Get("Coins") };
         
         [Header("Timing")]
         [Tooltip("How many days' payout should be stored up in player's absence?")]
@@ -90,9 +87,8 @@ namespace Stencil.Subscriptions
             {
                 TenjinProduct.Get(product).CheckSubscription();
                 if (IsSubscribed)
-                {
-                    foreach (var currency in payoutCurrencies) 
-                        TryPayout(product, currency);
+                { 
+                    TryPayout(product);
                 }
                 else
                 {
@@ -107,25 +103,17 @@ namespace Stencil.Subscriptions
             }
         }
 
-        private void TryPayout(Product product, Currency currency)
+        private void TryPayout(Product product)
         {
-            var coins = product.definition.GetPayout(currency.Name)?.GetInt() ?? 0;
-            if (coins == 0) return;
+            var payouts = product.GetPayouts();
             var peek = payout.Peek();
-            var pay = peek * coins;
-            Debug.Log($"StencilSubscriptions: Subscribed ({peek}x{pay}) {currency.Name}");
-            if (pay > 0)
+            if (peek == 0) return;
+            foreach (var price in payouts)
             {
-                Debug.Log($"StencilSubscriptions: Payout {pay} {currency.Name}");
-                currency.Add(pay).AndSave();
-                OnPayout?.Invoke(this, new Price(currency, (UInt128) pay));
-                payout.Mark();
+                price.Currency?.Add(price.GetAmount() * (uint) peek);
+                OnPayout?.Invoke(this, price);
             }
-            else
-            {
-                Debug.Log($"StencilSubscriptions: No Payout Due {currency.Name}");
-            }
-            
+            payout.Mark();
         }
     }
 }
