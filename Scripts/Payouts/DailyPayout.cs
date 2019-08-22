@@ -1,7 +1,6 @@
 using System;
 using Scripts.Maths;
 using Scripts.Prefs;
-using Scripts.RemoteConfig;
 using UnityEngine;
 
 namespace Scripts.Payouts
@@ -9,9 +8,12 @@ namespace Scripts.Payouts
     public class DailyPayout
     {
         public readonly string key;
-        public readonly TimeSpan interval;
-
-        public readonly int maxMult;
+        public TimeSpan interval;
+        public int maxMult = 7;
+        
+        // If both, it will take the most generous payout interpretation.
+        public bool useDayBoundary = true; 
+        public bool useIntervalBoundary = true;
         
         public DateTime? LastPayout
         {
@@ -19,10 +21,9 @@ namespace Scripts.Payouts
             set => StencilPrefs.Default.SetDateTime($"daily_payout_{key}", value).Save();
         }
 
-        public DailyPayout(string key, int maxMult = 7)
+        public DailyPayout(string key)
         {
             this.key = key;
-            this.maxMult = maxMult;
             interval = TimeSpan.FromDays(1);
         }
 
@@ -33,10 +34,10 @@ namespace Scripts.Payouts
             var diff = date - last;
             
             // we're going to either take the raw number of intervals that have passed (i.e. whole spans of 24h)...
-            var tickmult = (int) (diff.Ticks / interval.Ticks);
+            var tickmult = useIntervalBoundary ? (int) (diff.Ticks / interval.Ticks) : 0;
             
             // or we're going to take the number of calendar days that have passed. 
-            var daymult = (int) diff.TotalDays;
+            var daymult = useDayBoundary ? (int) diff.TotalDays : 0;
             
             // Whichever is most generous.
             var mult = Math.Max(tickmult, daymult).AtLeast(0).AtMost(maxMult);
