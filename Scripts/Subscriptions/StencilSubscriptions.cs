@@ -10,7 +10,6 @@ using UnityEngine;
 using UnityEngine.Purchasing;
 using Util;
 using Price = Currencies.Price;
-using StencilIap = Purchasing.StencilIap;
 
 namespace Stencil.Subscriptions
 {
@@ -55,7 +54,7 @@ namespace Stencil.Subscriptions
         {
             Debug.Log("StencilSubscriptions: Refresh...");
             var start = DateTime.UtcNow;
-            while (!StencilIap.IsReady())
+            while (!CodelessIAPStoreListener.initializationComplete)
             {
                 await UniTask.Yield();
                 var now = DateTime.UtcNow;
@@ -67,7 +66,7 @@ namespace Stencil.Subscriptions
             }
             
             Debug.Log("StencilSubscriptions: IAP Ready.");
-            var product = StencilIap.GetProduct(productId);
+            var product = CodelessIAPStoreListener.Instance.GetProduct(productId);
             if (product == null)
             {
                 Tracking.LogException(new NullReferenceException("Can't find subscription product"));
