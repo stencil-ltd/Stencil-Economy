@@ -1,9 +1,10 @@
+
+using Stencil.Economy.Purchasing;
 #if UNITY_PURCHASING
 using System;
 using Currencies;
 using Dirichlet.Numerics;
 using Scripts.Prefs;
-using Scripts.Tenjin.Abstraction;
 using UI;
 using UnityEngine;
 using UnityEngine.Purchasing;
@@ -65,7 +66,7 @@ namespace Scripts.Purchasing
             }
 
             CurrencyManager.Instance.Save();
-            TenjinProduct.Get(product).TrackPurchase();
+            StencilProductState.Get(product).TrackPurchase();
             
             OnPurchase?.Invoke(this, product);
             

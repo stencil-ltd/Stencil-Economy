@@ -3,7 +3,7 @@ using Analytics;
 using Scripts.Payouts;
 using Scripts.Prefs;
 using Scripts.Purchasing;
-using Scripts.Tenjin.Abstraction;
+using Stencil.Economy.Purchasing;
 using UI;
 using UniRx.Async;
 using UnityEngine;
@@ -85,7 +85,7 @@ namespace Stencil.Subscriptions
             Debug.Log($"StencilSubscriptions: Check Daily Payout");
             try
             {
-                TenjinProduct.Get(product).CheckSubscription();
+                StencilProductState.Get(product).CheckSubscription();
                 if (IsSubscribed)
                 { 
                     TryPayout(product);
