@@ -36,6 +36,7 @@ namespace Stencil.Economy.Purchasing.Reporting
         public static void Initialize(string url)
         {
             _init = true;
+            client = new HttpClient();
             client.BaseAddress = new Uri(url);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             Application.RequestAdvertisingIdentifierAsync((id, enabled, msg) => AdId = id);
