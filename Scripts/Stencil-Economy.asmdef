@@ -1,0 +1,19 @@
+{
+    "name": "Stencil-Economy",
+    "references": [
+        "GUID:b060e4da221ad426bb8e6a91bba572bc",
+        "GUID:f41f255b18f174d5c9d23177eac18ef7",
+        "GUID:778339548fa0b429f8d7ccaf22691e38",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [
+        "com.unity.purchasing"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}
