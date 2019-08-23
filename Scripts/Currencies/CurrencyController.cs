@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using Plugins.UI;
 using UI;
 using UnityEngine;
-using Util;
 
 namespace Currencies
 {

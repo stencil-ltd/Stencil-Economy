@@ -3,17 +3,15 @@
     "references": [
         "Stencil-Core",
         "Stencil-Analytics",
-        "Stencil-UI",
-        "UniRx.Async"
+        "UniRx.Async",
+        "Stencil-UI"
     ],
+    "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
-    "precompiledReferences": [
-        "com.unity.purchasing"
-    ],
+    "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": []
+    "defineConstraints": []
 }
