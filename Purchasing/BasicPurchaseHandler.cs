@@ -67,12 +67,19 @@ namespace Scripts.Purchasing
             }
 
             CurrencyManager.Instance.Save();
-            StencilProductState.Get(product).TrackPurchase();
-            
             OnPurchase?.Invoke(this, product);
             
             Count++;
             Last = DateTime.UtcNow;
+
+            try
+            {
+                StencilProductState.Get(product).TrackPurchase();
+            }
+            catch (Exception e)
+            {
+                Tracking.LogException(e);
+            }
         }
 
         private void _OnFailure(Product product, PurchaseFailureReason reason)
