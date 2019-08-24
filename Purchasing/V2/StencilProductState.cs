@@ -21,7 +21,7 @@ namespace Stencil.Economy.Purchasing
             #if UNITY_EDITOR
             return new StencilProductState(product);
             #elif UNITY_IOS
-            return new StencilProductStateProductIos(product);
+            return new StencilProductStateIos(product);
             #elif UNITY_ANDROID
             return new StencilProductStateAndroid(product);
             #else
