@@ -1,9 +1,8 @@
 #if UNITY_PURCHASING
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using Analytics;
+using Firebase.Crashlytics;
 using JetBrains.Annotations;
 using Scripts.RemoteConfig;
 using UniRx.Async;
@@ -59,9 +58,11 @@ namespace Stencil.Economy.Purchasing
             if (currencyCode == null)
             {
                 currencyCode = "USD";
-                Tracking.Instance.Track("null_currency_code", "product", productId)
+                var price = product.metadata?.localizedPriceString ?? "UNKNOWN";
+                Tracking.Instance
+                    .Track("null_currency_code", "product", productId, "price", price)
                     .SetUserProperty("null_currency_code", true);
-                Tracking.Record("Null Currency Code");
+                Tracking.LogException(new Exception($"Null Currency: {productId} - {price}"));
             }
             if (product.receipt == null)
             {
