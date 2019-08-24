@@ -2,12 +2,15 @@
 using System;
 using System.Collections.Generic;
 using Analytics;
-using Firebase.Crashlytics;
 using JetBrains.Annotations;
 using Scripts.RemoteConfig;
 using UniRx.Async;
 using UnityEngine;
 using UnityEngine.Purchasing;
+
+#if STENCIL_TENJIN
+using Scripts.Tenjin;
+#endif
 
 namespace Stencil.Economy.Purchasing
 {
@@ -18,9 +21,9 @@ namespace Stencil.Economy.Purchasing
             #if UNITY_EDITOR
             return new StencilProductState(product);
             #elif UNITY_IOS
-            return new TenjinProductIos(StencilTenjin.Instance, product);
+            return new StencilProductStateProductIos(product);
             #elif UNITY_ANDROID
-            return new StencilProductStateAndroid(StencilTenjin.Instance, product);
+            return new StencilProductStateAndroid(product);
             #else
             return new StencilProductState(product);
             #endif
@@ -50,7 +53,7 @@ namespace Stencil.Economy.Purchasing
 
         protected virtual void Refresh()
         {
-            Debug.Log($"TenjinProduct: Refresh {productId}");
+            Debug.Log($"StencilProductState: Refresh {productId}");
             productId = product.definition.id;
             CheckNotNull(productId, "Product ID");
             price = decimal.ToDouble(product.metadata.localizedPrice);
@@ -66,7 +69,7 @@ namespace Stencil.Economy.Purchasing
             }
             if (product.receipt == null)
             {
-                Debug.Log($"TenjinProduct: No Receipt {productId}");
+                Debug.Log($"StencilProductState: No Receipt {productId}");
                 wrapper = null;
                 payload = null;
                 subscription = null;
@@ -84,7 +87,7 @@ namespace Stencil.Economy.Purchasing
             {
                 if (!IsEnabled()) return;
                 
-                Debug.Log($"TenjinProduct: Check Subscription {productId}");
+                Debug.Log($"StencilProductState: Check Subscription {productId}");
                 Refresh();
                 
                 if (subscription == null)
@@ -94,7 +97,7 @@ namespace Stencil.Economy.Purchasing
                 var now = DateTime.UtcNow;
                 if (info.isSubscribed() != Result.True || info.isExpired() == Result.True)
                 {
-                    Debug.LogWarning($"TenjinProduct: Not subscribed {productId}");
+                    Debug.LogWarning($"StencilProductState: Not subscribed {productId}");
                     subscription.Clear();
                     return;
                 }
@@ -102,7 +105,7 @@ namespace Stencil.Economy.Purchasing
                 
                 if (info.isFreeTrial() == Result.True)
                 {
-                    Debug.Log($"TenjinProduct: Free Trial {productId}");
+                    Debug.Log($"StencilProductState: Free Trial {productId}");
                     return;
                 }
                 subscription.FirstChargeDate = subscription.FirstChargeDate ?? now;
@@ -110,7 +113,7 @@ namespace Stencil.Economy.Purchasing
                 var last = subscription.LastCharge;
                 if (last == null)
                 {
-                    Debug.Log($"TenjinProduct: First Charge: {productId}");
+                    Debug.Log($"StencilProductState: First Charge: {productId}");
                     OnTrackPurchase();
                     subscription.LastCharge = now;
                     return;
@@ -120,7 +123,7 @@ namespace Stencil.Economy.Purchasing
                 var count = 0;
                 while (next.ToUniversalTime() < now.ToUniversalTime())
                 {
-                    Debug.Log($"TenjinProduct: One valid charge {productId}");
+                    Debug.Log($"StencilProductState: One valid charge {productId}");
                     count++;
                     next += subscription.repeatInterval;
 
@@ -131,7 +134,7 @@ namespace Stencil.Economy.Purchasing
                 }
                 if (count > 0)
                 {
-                    Debug.Log($"TenjinProduct: Charge x{count} {productId}");
+                    Debug.Log($"StencilProductState: Charge x{count} {productId}");
                     OnTrackPurchase(count);
                     subscription.LastCharge = next;
                 }
@@ -152,16 +155,16 @@ namespace Stencil.Economy.Purchasing
             try
             {
                 if (!IsEnabled()) return;
-                Debug.Log($"TenjinProduct: TrackPurchase {productId}");
+                Debug.Log($"StencilProductState: TrackPurchase {productId}");
                 if (product.definition.type == ProductType.Subscription)
                 {
                     // submethod will call refresh.
-                    Debug.Log($"TenjinProduct: TrackPurchase -> CheckSubscription {productId}");
+                    Debug.Log($"StencilProductState: TrackPurchase -> CheckSubscription {productId}");
                     CheckSubscription();
                 }
                 else
                 {
-                    Debug.Log($"TenjinProduct: Valid Consumable Purchase {productId}");
+                    Debug.Log($"StencilProductState: Valid Consumable Purchase {productId}");
                     Refresh();
                     OnTrackPurchase();
                 }
@@ -179,10 +182,10 @@ namespace Stencil.Economy.Purchasing
 
         protected virtual void OnTrackPurchase(int count = 1)
         {
-            Debug.Log($"TenjinProduct: Process Receipt: {productId} {currencyCode} {price} {receipt} {signature}");
+            Debug.Log($"StencilProductState: Process Receipt: {productId} {currencyCode} {price} {receipt} {signature}");
             if (!StencilRemote.IsProd()) return;
             #if STENCIL_TENJIN && !UNITY_EDITOR
-            tenjin.tenjin.Transaction(productId, currencyCode, count, price, transactionId, receipt, signature);
+            StencilTenjin.Instance.tenjin.Transaction(productId, currencyCode, count, price, transactionId, receipt, signature);
             #endif
         }
         
