@@ -29,9 +29,9 @@ namespace Stencil.Economy.Purchasing
 
         public Product product { get; }
 
+        protected string productId;
         protected double price;
         protected string currencyCode;
-        protected string productId;
 
         [CanBeNull] protected Dictionary<string, object> wrapper;
         [CanBeNull] protected string payload;
@@ -55,8 +55,14 @@ namespace Stencil.Economy.Purchasing
             productId = product.definition.id;
             CheckNotNull(productId, "Product ID");
             price = decimal.ToDouble(product.metadata.localizedPrice);
-            currencyCode = product.metadata.isoCurrencyCode;
-            CheckNotNull(currencyCode, "Currency Code");
+            currencyCode = product.metadata?.isoCurrencyCode;
+            if (currencyCode == null)
+            {
+                currencyCode = "USD";
+                Tracking.Instance.Track("null_currency_code", "product", productId)
+                    .SetUserProperty("null_currency_code", true);
+                Tracking.Record("Null Currency Code");
+            }
             if (product.receipt == null)
             {
                 Debug.Log($"TenjinProduct: No Receipt {productId}");

@@ -1,13 +1,13 @@
-
-using Stencil.Economy.Purchasing;
 #if UNITY_PURCHASING
 using System;
+using Analytics;
 using Currencies;
 using Dirichlet.Numerics;
 using Scripts.Prefs;
 using UI;
 using UnityEngine;
 using UnityEngine.Purchasing;
+using Stencil.Economy.Purchasing;
 
 namespace Scripts.Purchasing
 {
@@ -45,6 +45,7 @@ namespace Scripts.Purchasing
         private void _OnPurchase(Product product)
         {
             Debug.Log($"Purchasing product {product.definition.id}");
+            Tracking.Instance.Track("iap_purchase", "product", product.definition.id);
             if (product.definition.type != ProductType.Subscription)
             {
                 foreach (var payout in product.definition.payouts)
