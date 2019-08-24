@@ -3,7 +3,6 @@
     "references": [
         "Stencil-Core",
         "Stencil-Analytics",
-        "UniRx.Async",
         "Stencil-UI"
     ],
     "optionalUnityReferences": [],
