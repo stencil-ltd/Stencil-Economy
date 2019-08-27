@@ -1,4 +1,3 @@
-#if UNITY_PURCHASING
 using System;
 using Analytics;
 using Currencies;
@@ -13,6 +12,7 @@ namespace Scripts.Purchasing
 {
     public class BasicPurchaseHandler : Controller<BasicPurchaseHandler>
     {
+#if UNITY_PURCHASING
         public static DateTime? Last
         {
             get => StencilPrefs.Default.GetDateTime("iap_purchase_last");
@@ -86,7 +86,6 @@ namespace Scripts.Purchasing
         {
             Debug.LogError($"Failed to purchase product {product.definition.id}");
         }
-        
+#endif
     }
 }
-#endif
