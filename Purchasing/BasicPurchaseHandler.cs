@@ -27,6 +27,7 @@ namespace Scripts.Purchasing
         
         public static event EventHandler<Currencies.Price> OnConsumable;
         public static event EventHandler<Product> OnPurchase;
+        public static event EventHandler<PurchaseFailureReason> OnPurchaseFail;
         
         private IAPListener _listener;
         
@@ -85,6 +86,7 @@ namespace Scripts.Purchasing
         private void _OnFailure(Product product, PurchaseFailureReason reason)
         {
             Debug.LogError($"Failed to purchase product {product.definition.id}");
+            OnPurchaseFail?.Invoke(product, reason);
         }
 #endif
     }
