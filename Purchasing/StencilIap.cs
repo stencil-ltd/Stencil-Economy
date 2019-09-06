@@ -34,7 +34,8 @@ namespace Scripts.Purchasing
         private static void ApplyEditorHack(this IAPButton button)
         {
 #if UNITY_EDITOR
-            button.priceText.text = "$" + button.priceText.text;
+            if (button.priceText != null)
+                button.priceText.text = "$" + button.priceText.text;
 #endif
         }
     }
