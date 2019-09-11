@@ -17,13 +17,7 @@ namespace Scripts.Ui
             this.Bind();
         }
 
-        private void OnEnable()
-        {
-            _button.ApplyPlatformHacks(false);
-            StartCoroutine(_Hack());
-        }
-
-        private IEnumerator _Hack()
+        private IEnumerator Start()
         {
             yield return null;
             _button.ApplyPlatformHacks(false);
