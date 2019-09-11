@@ -1,17 +1,16 @@
 using System;
+using System.Collections;
 using Analytics;
 using Scripts.Payouts;
 using Scripts.Prefs;
 using Scripts.Purchasing;
-using Stencil.Economy.Purchasing;
 using UI;
-using UniRx.Async;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using Util;
 using Price = Currencies.Price;
 
-namespace Stencil.Subscriptions
+namespace Stencil.Economy.Purchasing.Subscriptions
 {
     public class StencilSubscriptions : Controller<StencilSubscriptions>
     {
@@ -24,7 +23,7 @@ namespace Stencil.Subscriptions
         public static event EventHandler<Price> OnPayout; 
 
         [Header("Settings")]
-        public string key = "subscription_coins";
+        public string key = "standard_subscription";
         public string productId;
         public Product product;
         
@@ -47,21 +46,32 @@ namespace Stencil.Subscriptions
                 useIntervalBoundary = useIntervalBoundary
             };
             OnStateChanged?.Invoke();
-            var _ = Refresh();
+            Objects.StartCoroutine(Refresh());
+            BasicPurchaseHandler.OnPurchase += _OnPurchase;
         }
 
-        public async UniTask Refresh()
+        private void OnDestroy()
+        {
+            BasicPurchaseHandler.OnPurchase -= _OnPurchase;
+        }
+
+        private void _OnPurchase(object sender, Product e)
+        {
+            StartCoroutine(Refresh());
+        }
+
+        public IEnumerator Refresh()
         {
             Debug.Log("StencilSubscriptions: Refresh...");
             var start = DateTime.UtcNow;
             while (!CodelessIAPStoreListener.initializationComplete)
             {
-                await UniTask.Yield();
+                yield return null;
                 var now = DateTime.UtcNow;
                 if ((now - start).Seconds >= 10)
                 {
                     Debug.LogError("Subscriptions: Not ready after 10 seconds.");
-                    return;
+                    yield break;
                 }
             }
             
@@ -70,7 +80,7 @@ namespace Stencil.Subscriptions
             if (product == null)
             {
                 Tracking.LogException(new NullReferenceException("Can't find subscription product"));
-                return;
+                yield break;
             }
             
             IsSubscribed = product.hasReceipt;
