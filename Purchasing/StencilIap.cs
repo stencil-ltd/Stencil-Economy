@@ -7,21 +7,24 @@ namespace Scripts.Purchasing
 {
     public static class StencilIap
     {
-        public static void ApplyPlatformHacks(this IAPButton button)
+        public static void ApplyPlatformHacks(this IAPButton button, bool update = true)
         {
-            var method = typeof(IAPButton).GetMethod("UpdateText",BindingFlags.NonPublic | BindingFlags.Instance);
-            if (method == null)
+            if (update)
             {
-                Debug.LogError("Missing UpdateText Method");
-            }
-            else
-            {
-                method.Invoke(button, null);
+                var method = typeof(IAPButton).GetMethod("UpdateText",BindingFlags.NonPublic | BindingFlags.Instance);
+                if (method == null)
+                {
+                    Debug.LogError("Missing UpdateText Method");
+                }
+                else
+                {
+                    method.Invoke(button, null);
+                }
             }
             ApplyAndroidHack(button);
             ApplyEditorHack(button);
         }
-        
+
         private static void ApplyAndroidHack(this IAPButton button)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
