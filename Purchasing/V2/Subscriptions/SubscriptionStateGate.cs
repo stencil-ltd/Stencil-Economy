@@ -6,6 +6,8 @@ namespace Purchasing.V2.Subscriptions
 {
     public class SubscriptionStateGate : ActiveGate
     {
+        public bool invert;
+        
         public override void Register(ActiveManager manager)
         {
             base.Register(manager);
@@ -25,7 +27,7 @@ namespace Purchasing.V2.Subscriptions
 
         public override bool? Check()
         {
-            return StencilSubscriptions.IsSubscribed;
+            return StencilSubscriptions.IsSubscribed ^ invert;
         }
     }
 }
