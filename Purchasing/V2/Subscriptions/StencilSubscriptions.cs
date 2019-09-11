@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Analytics;
+using Currencies;
 using Scripts.Payouts;
 using Scripts.Prefs;
 using Scripts.Purchasing;
@@ -97,7 +98,7 @@ namespace Stencil.Economy.Purchasing.Subscriptions
                 StencilProductState.Get(product).CheckSubscription();
                 if (IsSubscribed)
                 { 
-                    TryPayout(product);
+                    Objects.StartCoroutine(TryPayout(product));
                 }
                 else
                 {
@@ -112,17 +113,20 @@ namespace Stencil.Economy.Purchasing.Subscriptions
             }
         }
 
-        private void TryPayout(Product product)
+        private IEnumerator TryPayout(Product product)
         {
             var payouts = product.GetPayouts();
             var peek = payout.Peek();
-            if (peek == 0) return;
+            if (peek == 0) yield break;
             foreach (var price in payouts)
             {
-                price.Currency?.Add(price.GetAmount() * (uint) peek);
+                var currency = price.Currency;
+                if (currency == null) continue;
+                currency.Add(price.GetAmount() * (uint) peek);
                 OnPayout?.Invoke(this, price);
+                yield return new WaitForSeconds(1f);
             }
-            payout.Mark();
+            payout.Mark(); // this should also save out the currency states.
         }
     }
 }
