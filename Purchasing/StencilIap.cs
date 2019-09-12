@@ -22,7 +22,7 @@ namespace Scripts.Purchasing
                 }
             }
             ApplyAndroidHack(button);
-            ApplyEditorHack(button);
+//            ApplyEditorHack(button); // this gets confusing after a while.
         }
 
         private static void ApplyAndroidHack(this IAPButton button)
