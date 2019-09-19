@@ -35,6 +35,7 @@ namespace Stencil.Economy.Purchasing.Subscriptions
         public bool useDayBoundary = true;
         [Tooltip("Should payout occur every interval period? (can be combined with useIntervalBoundary")]
         public bool useIntervalBoundary = true;
+        public bool delayBetweenPayouts = true;
         
         private DailyPayout payout;
 
@@ -124,7 +125,7 @@ namespace Stencil.Economy.Purchasing.Subscriptions
                 if (currency == null) continue;
                 currency.Add(price.GetAmount() * (uint) peek);
                 OnPayout?.Invoke(this, price);
-                yield return new WaitForSeconds(1f);
+                if (delayBetweenPayouts) yield return new WaitForSeconds(1f);
             }
             payout.Mark(); // this should also save out the currency states.
         }
