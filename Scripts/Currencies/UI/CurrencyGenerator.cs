@@ -80,7 +80,7 @@ namespace Currencies.UI
 
         private bool IsMaxed()
         {
-            return max > 0 && currency.Total() > max;
+            return max > 0 && currency.Total() >= max;
         }
     }
 }
