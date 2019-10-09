@@ -30,10 +30,9 @@ namespace Scripts.Purchasing
         public static event EventHandler<PurchaseFailureReason> OnPurchaseFail;
         
         private IAPListener _listener;
-        
-        public override void Register()
+
+        private void Start()
         {
-            base.Register();
             _listener = gameObject.AddComponent<IAPListener>();
             _listener.dontDestroyOnLoad = false;
             
@@ -42,7 +41,14 @@ namespace Scripts.Purchasing
             _listener.onPurchaseFailed = _listener.onPurchaseFailed ?? new IAPListener.OnPurchaseFailedEvent();
             _listener.onPurchaseFailed.AddListener(_OnFailure);
         }
-        
+
+        private void OnDestroy()
+        {
+            if (_listener == null) return;
+            _listener.onPurchaseComplete.RemoveListener(_OnPurchase);
+            _listener.onPurchaseFailed.RemoveListener(_OnFailure);
+        }
+
         private void _OnPurchase(Product product)
         {
             Debug.Log($"Purchasing product {product.definition.id}");
