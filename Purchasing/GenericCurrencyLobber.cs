@@ -6,7 +6,6 @@ using Currencies;
 using Lobbing;
 using Purchasing.Lobbing;
 using Scripts.Purchasing;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Stencil.Economy.Ui
