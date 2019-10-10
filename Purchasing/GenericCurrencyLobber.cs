@@ -14,7 +14,6 @@ namespace Stencil.Economy.Ui
     [RequireComponent(typeof(Lobber))]
     public class GenericCurrencyLobber : MonoBehaviour
     {
-        public static Coroutine LatestLob { get; private set; }
         public static int LobCount { get; private set; }
         
 #if UNITY_PURCHASING
@@ -31,39 +30,38 @@ namespace Stencil.Economy.Ui
         private void OnEnable()
         {
             BasicPurchaseHandler.OnConsumable += _OnPurchase;
+            currency.OnSpendableChanged += _OnSpend;
         }
 
         private void OnDisable()
         {
             BasicPurchaseHandler.OnConsumable -= _OnPurchase;
+            currency.OnSpendableChanged -= _OnSpend;
+        }
+
+        private void _OnSpend(object sender, CurrencyEvent e)
+        {
+            if (e.currency != currency) return;
+            if (e.to >= e.from) return;
+            StartCoroutine(_Lob(e.currency, (ulong) (e.from - e.to), true));
         }
 
         private void _OnPurchase(object sender, Price e)
         {
-            if (e.Currency == currency) 
-                LatestLob = StartCoroutine(Lob(e));
+            if (e.Currency != currency) return; 
+            StartCoroutine(_Lob(e.Currency, (ulong) e.GetAmount(), false));
         }
 
-        private IEnumerator Lob(Price e)
+        private IEnumerator _Lob(Currency currency, ulong amount, bool spend)
         {
-            var co = StartCoroutine(_Lob(e));
-            LatestLob = co;
-            yield return co;
-            if (LatestLob == co) LatestLob = null;
-        }
-
-        private IEnumerator _Lob(Price e)
-        {
-            Debug.Log($"Begin Lob: {e.Currency}");
             LobCount++;
-            var amount = (ulong) e.GetAmount();
+            Debug.Log($"Begin Lob: {currency}");
             
             // Lob to from/to combinations.
-            var froms = CurrencyLobTarget.GetTargets(e.Currency, LobTargetType.From);
-            var tos = CurrencyLobTarget.GetTargets(e.Currency, LobTargetType.To);
-            if (froms.IsNullOrEmpty() || tos.IsNullOrEmpty()) yield break;
-
+            var froms = CurrencyLobTarget.GetTargets(currency, LobTargetType.From, spend);
+            var tos = CurrencyLobTarget.GetTargets(currency, LobTargetType.To, spend);
             var lobs = new List<Coroutine>();
+            
             foreach (var from in froms)
             {
                 foreach (var to in tos)
@@ -83,7 +81,7 @@ namespace Stencil.Economy.Ui
             foreach (var coroutine in lobs)
                 yield return coroutine;
             
-            Debug.Log($"Finish Lob: {e.Currency}");
+            Debug.Log($"Finish Lob: {currency}");
             LobCount--;
         }
 #endif
