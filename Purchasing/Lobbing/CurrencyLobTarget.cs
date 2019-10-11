@@ -35,6 +35,7 @@ namespace Purchasing.Lobbing
         public Currency currency;
         public LobTargetType onAcquire;
         public LobTargetType onSpend;
+        public float delayEnd = 0f;
 
         private void OnEnable()
         {

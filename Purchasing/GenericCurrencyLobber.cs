@@ -5,6 +5,7 @@ using Binding;
 using Currencies;
 using Lobbing;
 using Purchasing.Lobbing;
+using Scripts.Maths;
 using Scripts.Purchasing;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ namespace Stencil.Economy.Ui
 #if UNITY_PURCHASING
 
         public Currency currency;
+        public float delayEnd = 0f;
         
         [Bind] private Lobber _lobber;
 
@@ -60,6 +62,7 @@ namespace Stencil.Economy.Ui
             var froms = CurrencyLobTarget.GetTargets(currency, LobTargetType.From, spend);
             var tos = CurrencyLobTarget.GetTargets(currency, LobTargetType.To, spend);
             var lobs = new List<Coroutine>();
+            var delayEnd = this.delayEnd;
             
             foreach (var from in froms)
             {
@@ -71,12 +74,14 @@ namespace Stencil.Economy.Ui
                         To = to.transform
                     };
                     lobs.Add(StartCoroutine(_lobber.LobMany(amount, overrides)));
+                    delayEnd = delayEnd.AtLeast(to.delayEnd);
                 }
             }
             
             if (_lobber.From != null && _lobber.To != null)
                 lobs.Add(StartCoroutine(_lobber.LobMany(amount)));
             
+            if (delayEnd > 0f) yield return new WaitForSeconds(delayEnd);
             foreach (var coroutine in lobs)
                 yield return coroutine;
             
