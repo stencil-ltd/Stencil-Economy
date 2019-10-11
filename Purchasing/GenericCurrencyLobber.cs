@@ -7,6 +7,7 @@ using Lobbing;
 using Purchasing.Lobbing;
 using Scripts.Maths;
 using Scripts.Purchasing;
+using UniRx.Async;
 using UnityEngine;
 
 namespace Stencil.Economy.Ui
@@ -15,7 +16,9 @@ namespace Stencil.Economy.Ui
     public class GenericCurrencyLobber : MonoBehaviour
     {
         public static int LobCount { get; private set; }
-        
+        public static UniTask Wait() 
+            => UniTask.WaitWhile(() => LobCount > 0);
+
 #if UNITY_PURCHASING
 
         public Currency currency;
