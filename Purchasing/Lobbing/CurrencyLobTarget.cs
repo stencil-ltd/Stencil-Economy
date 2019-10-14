@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Currencies;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Purchasing.Lobbing
 {
@@ -65,6 +67,8 @@ namespace Purchasing.Lobbing
         public LobTargetType onSpend;
         public float delayEnd = 0f;
         public CurrencyLobPrecedence precedence = CurrencyLobPrecedence.Default;
+        
+        [CanBeNull] public UnityEvent onLobsCompleted;
 
         private void OnEnable()
         {

@@ -74,7 +74,8 @@ namespace Stencil.Economy.Ui
                     var overrides = new LobOverrides
                     {
                         From = from.transform,
-                        To = to.transform
+                        To = to.transform,
+                        OnManyComplete = () => to.onLobsCompleted?.Invoke()
                     };
                     lobs.Add(StartCoroutine(_lobber.LobMany(amount, overrides)));
                     delayEnd = delayEnd.AtLeast(to.delayEnd);
