@@ -176,6 +176,11 @@ namespace Currencies
             return Succeed();
         }
 
+        public CurrencyOperation CommitAll()
+        {
+            return Commit(Staged());
+        }
+
         public CurrencyOperation Commit(UInt128 amount, bool bestEffort = false)
         {
             var oldTotal = Total();
