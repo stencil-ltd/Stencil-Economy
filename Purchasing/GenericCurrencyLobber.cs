@@ -15,7 +15,7 @@ namespace Stencil.Economy.Ui
     [RequireComponent(typeof(Lobber))]
     public class GenericCurrencyLobber : MonoBehaviour
     {
-        public static int LobCount { get; private set; }
+        private static int LobCount { get; set; }
         public static UniTask Wait() 
             => UniTask.WaitWhile(() => LobCount > 0);
 
